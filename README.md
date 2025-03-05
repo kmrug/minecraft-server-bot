@@ -61,9 +61,8 @@ java -jar target/minecraft-discord-bot.jar
 ## Author
 **Kishan Mrug**
 
-Connect with me on [LinkedIn](https://www.linkedin.com/in/kishan-mrug/)
-
-Checkout my [Portfolio](https://kishanmrug.dev/)
+- Connect with me on [LinkedIn](https://www.linkedin.com/in/kishan-mrug/)
+- Checkout my [Portfolio](https://kishanmrug.dev/)
 
 ## License
 
