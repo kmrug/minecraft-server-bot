@@ -56,23 +56,9 @@ mvn clean package
 java -jar target/minecraft-discord-bot.jar
 ```
 
-### Docker Setup (Coming Soon)
+### Docker Setup (Coming Soon) 
 
-## Roadmap
-
-- [x] Start/Stop Server Commands
-- [x] Player Count
-- [x] Idle Shutdown
-- [x] Restart Server Command
-- [x] Server Status with Resource Usage
-- [ ] Dockerize the Bot
-- [ ] Use Log4j for logging
-- [ ] Port Forwarding
-- [ ] Unit Testing with JUnit
-- [ ] Spring Boot Integration
-- [ ] Cloud Deployment (AWS, DigitalOcean, etc.)
-
-### Author
+## Author
 **Kishan Mrug**
 
 Connect with me on [LinkedIn](https://www.linkedin.com/in/kishan-mrug/)
