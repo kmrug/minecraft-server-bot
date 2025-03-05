@@ -1,0 +1,5 @@
+com\kmrug\discordbot\App.class
+com\kmrug\discordbot\IdleShutdownManager.class
+com\kmrug\discordbot\Bot.class
+com\kmrug\discordbot\IdleShutdownManager$1.class
+com\kmrug\discordbot\CommandListener.class

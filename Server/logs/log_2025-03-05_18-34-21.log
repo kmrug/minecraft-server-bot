@@ -1,0 +1,37 @@
+[18:34:29] [ServerMain/INFO]: Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, name=PROD]
+[18:34:31] [ServerMain/INFO]: Loaded 1370 recipes
+[18:34:31] [ServerMain/INFO]: Loaded 1481 advancements
+[18:34:31] [Server thread/INFO]: Starting minecraft server version 1.21.4
+[18:34:31] [Server thread/INFO]: Loading properties
+[18:34:31] [Server thread/INFO]: Default game type: SURVIVAL
+[18:34:31] [Server thread/INFO]: Generating keypair
+[18:34:31] [Server thread/INFO]: Starting Minecraft server on *:25565
+[18:34:31] [Server thread/INFO]: Using default channel type
+[18:34:32] [Server thread/INFO]: Preparing level "world"
+[18:34:32] [Server thread/INFO]: Preparing start region for dimension minecraft:overworld
+[18:34:33] [Worker-Main-10/INFO]: Preparing spawn area: 0%
+[18:34:33] [Worker-Main-10/INFO]: Preparing spawn area: 0%
+[18:34:33] [Worker-Main-10/INFO]: Preparing spawn area: 0%
+[18:34:33] [Server thread/INFO]: Time elapsed: 1322 ms
+[18:34:33] [Server thread/INFO]: Done (1.591s)! For help, type "help"
+[18:34:33] [Server thread/INFO]: There are 0 of a max of 20 players online: 
+[18:35:10] [User Authenticator #1/INFO]: UUID of player luffysan85 is 4a5f8d7c-0559-4e1b-a26d-9c3dbabad323
+[18:35:11] [Server thread/INFO]: luffysan85[/192.168.1.38:58521] logged in with entity id 64 at (9.202186732953962, 62.0, 31.429257940982684)
+[18:35:12] [Server thread/INFO]: luffysan85 joined the game
+[18:35:59] [User Authenticator #2/INFO]: UUID of player PSYmoom is 76295fe4-18ab-4526-bbc9-ead5a8321ddc
+[18:36:01] [Server thread/INFO]: PSYmoom[/192.168.1.38:58543] logged in with entity id 342 at (24.5, 63.0, 25.5)
+[18:36:01] [Server thread/INFO]: PSYmoom joined the game
+[18:36:22] [Server thread/INFO]: There are 2 of a max of 20 players online: luffysan85, PSYmoom
+[18:37:09] [Server thread/INFO]: PSYmoom lost connection: Disconnected
+[18:37:09] [Server thread/INFO]: PSYmoom left the game
+[18:37:20] [Server thread/INFO]: Stopping the server
+[18:37:20] [Server thread/INFO]: Stopping server
+[18:37:20] [Server thread/INFO]: Saving players
+[18:37:20] [Server thread/INFO]: Saving worlds
+[18:37:20] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:overworld
+[18:37:21] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_nether
+[18:37:21] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_end
+[18:37:21] [Server thread/INFO]: ThreadedAnvilChunkStorage (world): All chunks are saved
+[18:37:21] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[18:37:21] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[18:37:21] [Server thread/INFO]: ThreadedAnvilChunkStorage: All dimensions are saved
