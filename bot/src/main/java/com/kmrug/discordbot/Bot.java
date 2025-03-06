@@ -1,5 +1,7 @@
 package com.kmrug.discordbot;
 
+import io.github.cdimascio.dotenv.Dotenv;
+
 import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.File;
@@ -10,13 +12,11 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
 import java.net.Socket;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -50,20 +50,23 @@ public class Bot extends ListenerAdapter {
 
   public static void main(String[] args) throws Exception {
 
-    Properties props = new Properties();
-    props.load(Files.newInputStream(Paths.get(".env")));
+    String token = System.getenv("DISCORD_TOKEN"); // For Docker
 
-    String token = props.getProperty("DISCORD_TOKEN");
+    if (token == null || token.isEmpty()) {
+      Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load(); // Loads from .env file (only for local use)
+      token = dotenv.get("DISCORD_TOKEN"); // Fallback to local .env file
+    }
 
-    System.out.println("The token is " + token);
+    if (token == null || token.isEmpty()) {
+      throw new IllegalArgumentException("DISCORD_TOKEN is missing! Set it as an environment variable.");
+    }
 
     JDA jda = JDABuilder.createDefault(token)
         .enableIntents(GatewayIntent.MESSAGE_CONTENT)
         .setActivity(Activity.watching("An idiot manage minecraft servers"))
-        .build();
+        .build()
+        .awaitReady();
 
-    // Wait until JDA is fully loaded before continuing
-    jda.awaitReady();
     System.out.println("[BOT] Discord bot is online!");
 
     // Create bot instance and pass the JDA instance to it
@@ -113,8 +116,8 @@ public class Bot extends ListenerAdapter {
     try {
 
       // Define server file location
-      File serverJar = new File("C:\\Users\\kisha\\Desktop\\Minecraft-Discord-Bot\\Server\\server.jar");
-      File logFile = new File("C:\\Users\\kisha\\Desktop\\Minecraft-Discord-Bot\\Server\\logs\\latest.log");
+      File serverJar = new File("./Server/server.jar");
+      File logFile = new File("./Server/logs/latest.log");
 
       if (logFile.exists()) {
         logFile.delete();
@@ -185,7 +188,7 @@ public class Bot extends ListenerAdapter {
     }
 
     // Path of the latest.log file
-    File latestLog = new File("C:\\Users\\kisha\\Desktop\\Minecraft-Discord-Bot\\Server\\logs\\latest.log");
+    File latestLog = new File("./Server/logs/latest.log");
 
     try {
       // Send "stop" command to the minecraft server
@@ -200,7 +203,7 @@ public class Bot extends ListenerAdapter {
       System.out.println("Minecraft server stopped with exit code: " + exitCode);
 
       if (latestLog.exists()) {
-        File renamedLog = new File("C:\\Users\\kisha\\Desktop\\Minecraft-Discord-Bot\\Server\\logs\\" + logFileName);
+        File renamedLog = new File("./Server/logs/" + logFileName);
         Files.move(latestLog.toPath(), renamedLog.toPath(), StandardCopyOption.REPLACE_EXISTING);
         System.out.println("Log file renamed to: " + renamedLog.getName());
       }
@@ -296,7 +299,8 @@ public class Bot extends ListenerAdapter {
           .addField("Uptime", uptime, false)
           .addField("Arch Name", archName, false)
           .addField("CPU Load", String.format("%.2f%%", cpuLoad * 100), false)
-          .addField("System Load Average", systemLoad == -1.0 ? "N/A" : String.format("%.2f%%", systemLoad * 100), false)
+          .addField("System Load Average", systemLoad == -1.0 ? "N/A" : String.format("%.2f%%", systemLoad * 100),
+              false)
           .addField("Processors", String.format("%d", processors), false)
           .addField("Total Memory", String.format("%d MB", totalMemory), true)
           .addField("Used Memory", String.format("%d MB", usedMemory), true)
@@ -349,7 +353,7 @@ public class Bot extends ListenerAdapter {
       return -1;
     }
 
-    File logFile = new File("C:\\Users\\kisha\\Desktop\\Minecraft-Discord-Bot\\Server\\logs\\latest.log");
+    File logFile = new File("./Server/logs/latest.log");
 
     if (!logFile.exists()) {
       event.getChannel().sendMessage("⚠️ Could not find the server log file.").queue();
