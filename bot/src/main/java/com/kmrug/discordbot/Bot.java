@@ -1,7 +1,5 @@
 package com.kmrug.discordbot;
 
-import io.github.cdimascio.dotenv.Dotenv;
-
 import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.File;
@@ -23,6 +21,7 @@ import java.util.regex.Pattern;
 
 import com.sun.management.OperatingSystemMXBean;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -63,7 +62,7 @@ public class Bot extends ListenerAdapter {
 
     JDA jda = JDABuilder.createDefault(token)
         .enableIntents(GatewayIntent.MESSAGE_CONTENT)
-        .setActivity(Activity.watching("An idiot manage minecraft servers"))
+        .setActivity(Activity.playing("Custom minecraft servers"))
         .build()
         .awaitReady();
 
