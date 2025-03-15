@@ -1,0 +1,34 @@
+[13:33:40] [ServerMain/INFO]: Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, name=PROD]
+[13:33:46] [ServerMain/INFO]: Loaded 1370 recipes
+[13:33:46] [ServerMain/INFO]: Loaded 1481 advancements
+[13:33:46] [Server thread/INFO]: Starting minecraft server version 1.21.4
+[13:33:46] [Server thread/INFO]: Loading properties
+[13:33:46] [Server thread/INFO]: Default game type: SURVIVAL
+[13:33:46] [Server thread/INFO]: Generating keypair
+[13:33:46] [Server thread/INFO]: Starting Minecraft server on *:25565
+[13:33:47] [Server thread/INFO]: Using epoll channel type
+[13:33:47] [Server thread/INFO]: Preparing level "world"
+[13:33:48] [Server thread/INFO]: Preparing start region for dimension minecraft:overworld
+[13:33:49] [Worker-Main-8/INFO]: Preparing spawn area: 0%
+[13:33:49] [Worker-Main-8/INFO]: Preparing spawn area: 0%
+[13:33:49] [Worker-Main-8/INFO]: Preparing spawn area: 0%
+[13:33:49] [Worker-Main-8/INFO]: Preparing spawn area: 0%
+[13:33:49] [Server thread/INFO]: Time elapsed: 1778 ms
+[13:33:49] [Server thread/INFO]: Done (2.510s)! For help, type "help"
+[13:33:50] [Server thread/INFO]: There are 0 of a max of 20 players online: 
+[13:33:58] [User Authenticator #1/INFO]: UUID of player luffysan85 is 4a5f8d7c-0559-4e1b-a26d-9c3dbabad323
+[13:33:59] [Server thread/INFO]: luffysan85[/172.18.0.1:34454] logged in with entity id 49 at (16.428784499091417, 62.0, 6.300000011920929)
+[13:33:59] [Server thread/INFO]: luffysan85 joined the game
+[13:34:13] [Server thread/INFO]: Stopping the server
+[13:34:13] [Server thread/INFO]: Stopping server
+[13:34:13] [Server thread/INFO]: Saving players
+[13:34:13] [Server thread/INFO]: luffysan85 lost connection: Server closed
+[13:34:13] [Server thread/INFO]: luffysan85 left the game
+[13:34:13] [Server thread/INFO]: Saving worlds
+[13:34:13] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:overworld
+[13:34:14] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_end
+[13:34:14] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_nether
+[13:34:14] [Server thread/INFO]: ThreadedAnvilChunkStorage (world): All chunks are saved
+[13:34:14] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[13:34:14] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[13:34:14] [Server thread/INFO]: ThreadedAnvilChunkStorage: All dimensions are saved
