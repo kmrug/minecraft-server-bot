@@ -1,0 +1,9 @@
+| **Plugin**                                                                             | **Purpose**                                          | **When to Use It?**                                           |
+| -------------------------------------------------------------------------------------- | ---------------------------------------------------- | ------------------------------------------------------------- |
+| [`maven-compiler-plugin`](https://maven.apache.org/plugins/maven-compiler-plugin/)     | Compiles Java code                                   | Always needed, ensures correct Java version                   |
+| [`maven-shade-plugin`](https://maven.apache.org/plugins/maven-shade-plugin/)           | Creates a **fat JAR** (includes dependencies inside) | When your JAR needs to run **independently** (like in Docker) |
+| [`maven-jar-plugin`](https://maven.apache.org/plugins/maven-jar-plugin/)               | Builds a normal JAR file                             | When dependencies **don’t** need to be included               |
+| [`exec-maven-plugin`](https://www.mojohaus.org/exec-maven-plugin/)                     | Runs Java applications directly from Maven           | Useful for running the bot without manually using `java -jar` |
+| [`maven-surefire-plugin`](https://maven.apache.org/surefire/maven-surefire-plugin/)    | Runs unit tests                                      | When you need to test your code automatically                 |
+| [`maven-dependency-plugin`](https://maven.apache.org/plugins/maven-dependency-plugin/) | Manages dependencies (downloading, copying)          | When you need to handle dependencies manually                 |
+| [`maven-checkstyle-plugin`](https://maven.apache.org/plugins/maven-checkstyle-plugin/) | Enforces coding standards                            | When working in teams to maintain clean code                  |
