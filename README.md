@@ -9,9 +9,9 @@ A Discord bot that integrates with a Minecraft server to provide management comm
 - ✅ Idle Shutdown (Automatic server shutdown if no players are online for a set time)
 - ✅ Server Restart Command
 - ✅ Resource Monitoring (CPU, Memory usage)
-- 🔄 Dockerization (In Progress)
-- 🔄 Log4j Integration for logging (Planned)
-- 🔄 Port Forwarding for Public Access (Deferred)
+- ✅ Dockerization
+- ✅ Log4j Integration for logging
+- 🔄 Port Forwarding for Public Access (Planned)
 - 🔄 Testing with JUnit (Planned)
 - 🔄 Spring Boot Integration (Planned)
 - 🔄 Deployment on AWS or other Cloud Platforms (Planned)
