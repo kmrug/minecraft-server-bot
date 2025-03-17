@@ -21,6 +21,7 @@ RUN mvn clean package
 # Runtime Stage
 FROM eclipse-temurin:23-jre
 WORKDIR /app
+WORKDIR /app/Server
 
 # Copy only the final JAR from the build stage
 COPY  --from=build /app/target/minecraft-discord-bot.jar app.jar
