@@ -102,6 +102,32 @@ public class Bot extends ListenerAdapter {
 
   public void startMinecraftServer(SlashCommandInteractionEvent event) {
 
+    // Debug: Log the current directory contents before starting the server
+    File serverDir = new File("/app/Server");
+    if (!serverDir.exists()) {
+      System.out.println("[DEBUG] Server directory does NOT exist: " + serverDir.getAbsolutePath());
+    } else {
+      System.out.println("[DEBUG] Server directory exists: " + serverDir.getAbsolutePath());
+      System.out.println("[DEBUG] Listing contents of Server directory:");
+      for (File file : serverDir.listFiles()) {
+        System.out.println(" - " + file.getName());
+      }
+    }
+
+    // Debug: Check if Java is available
+    try {
+      ProcessBuilder checkJava = new ProcessBuilder("java", "-version");
+      checkJava.redirectErrorStream(true);
+      Process process = checkJava.start();
+      BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+      String line;
+      while ((line = reader.readLine()) != null) {
+        System.out.println("[DEBUG] Java Check: " + line);
+      }
+    } catch (IOException e) {
+      System.out.println("[DEBUG] Java command not found! " + e.getMessage());
+    }
+
     long startTime = System.currentTimeMillis(); // Start time
 
     if (serverProcess != null && serverProcess.isAlive()) {
@@ -136,16 +162,10 @@ public class Bot extends ListenerAdapter {
 
       // Start the server process
       ProcessBuilder processBuilder = new ProcessBuilder(
-          "/usr/bin/java", "-Xmx1024M", "-Xms1024M", "-jar", "/app/Server/server.jar", "nogui");
+          "java", "-Xmx1024M", "-Xms1024M", "-jar", serverJar.getAbsolutePath(),
+          "nogui");
 
-          processBuilder.directory(new File("/app/Server")); // set working dir
-
-      // // Start the server process
-      // ProcessBuilder processBuilder = new ProcessBuilder(
-      // "java", "-Xmx1024M", "-Xms1024M", "-jar", serverJar.getAbsolutePath(),
-      // "nogui");
-
-      // processBuilder.directory(serverJar.getParentFile()); // set working dir
+      processBuilder.directory(serverJar.getParentFile()); // set working dir
       processBuilder.redirectOutput(logFile);
       processBuilder.redirectError(logFile);
 
