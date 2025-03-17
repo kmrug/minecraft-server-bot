@@ -11,6 +11,7 @@ import java.lang.management.RuntimeMXBean;
 import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -101,7 +102,9 @@ public class Bot extends ListenerAdapter {
 
   public void startMinecraftServer(SlashCommandInteractionEvent event) {
 
-    if (serverProcess != null && serverProcess.isAlive()) {      
+    long startTime = System.currentTimeMillis(); // Start time
+
+    if (serverProcess != null && serverProcess.isAlive()) {
       event.getChannel().sendMessage("⚠️ Minecraft server is already running!").queue();
       logger.warn("Minecraft server is already running!");
       return;
@@ -126,7 +129,7 @@ public class Bot extends ListenerAdapter {
 
       if (logFile.exists()) {
         logFile.delete();
-        logger.info("Deleted old latest.log");        
+        logger.info("Deleted old latest.log");
       }
 
       logFileName = getLogTimeStamp();
@@ -161,14 +164,20 @@ public class Bot extends ListenerAdapter {
             Matcher matcher = serverStarted.matcher(line);
             if (matcher.find()) {
               serverReady = true;
-              event.getChannel().sendMessage("✅ Minecraft server is ready! (Started in " + matcher.group(1) + "s)")
+              long endTime = System.currentTimeMillis(); // End time
+              long executionTime = endTime - startTime; // Calculate elapsed time
+              double executionTimeInSeconds = executionTime / 1000.0;
+              DecimalFormat df = new DecimalFormat("0.00"); // Format to 2 decimal places
+              event.getChannel()
+                  .sendMessage(
+                      "✅ Minecraft server is ready! (Initialized in " + df.format(executionTimeInSeconds) + " seconds.)")
                   .queue();
               break;
 
             }
           }
         } catch (IOException e) {
-          logger.error("[BOT ERROR] Failed to read latest.log: " + e);          
+          logger.error("[BOT ERROR] Failed to read latest.log: " + e);
         }
       }
 
@@ -206,11 +215,11 @@ public class Bot extends ListenerAdapter {
       int exitCode = serverProcess.waitFor();
 
       // Log the shutdown in the bot console
-      logger.info("Minecraft server stopped with exit code: " + exitCode);      
+      logger.info("Minecraft server stopped with exit code: " + exitCode);
 
       if (latestLog.exists()) {
         File renamedLog = new File("./Server/logs/" + logFileName);
-        Files.move(latestLog.toPath(), renamedLog.toPath(), StandardCopyOption.REPLACE_EXISTING);        
+        Files.move(latestLog.toPath(), renamedLog.toPath(), StandardCopyOption.REPLACE_EXISTING);
         logger.info("Log file renamed to: " + renamedLog.getName());
       }
 
@@ -218,7 +227,7 @@ public class Bot extends ListenerAdapter {
       serverProcess = null;
 
       if (stopMethod.equals("ManualStop")) {
-        String manualStop = "✅ Minecraft server has safely shut down.";        
+        String manualStop = "✅ Minecraft server has safely shut down.";
         channel.sendMessage(manualStop).queue();
         idleShutdownManager.stopTimer();
         logger.info("Minecraft server has safely shut down.");
@@ -229,13 +238,13 @@ public class Bot extends ListenerAdapter {
       }
 
     } catch (IOException e) {
-      channel.sendMessage("❌ Failed to stop the Minecraft server due to I/O error.").queue();      
-      logger.error("[BOT ERROR] I/O Exception while stopping server: " + e);      
+      channel.sendMessage("❌ Failed to stop the Minecraft server due to I/O error.").queue();
+      logger.error("[BOT ERROR] I/O Exception while stopping server: " + e);
     } catch (InterruptedException e) {
       channel.sendMessage("❌ Server shutdown process was interrupted.").queue();
-      logger.error("[BOT ERROR] InterruptedException while stopping server: " + e);  
+      logger.error("[BOT ERROR] InterruptedException while stopping server: " + e);
     } catch (Exception e) {
-      channel.sendMessage("❌ Unexpected error while stopping the server.").queue();      
+      channel.sendMessage("❌ Unexpected error while stopping the server.").queue();
       logger.error("[BOT ERROR] Unexpected error: " + e);
     }
   }
@@ -274,7 +283,7 @@ public class Bot extends ListenerAdapter {
 
     if (!processRunning) {
       event.getHook().sendMessage("⚠️ Minecraft server is offline").queue();
-      logger.warn("Server is offline.");      
+      logger.warn("Server is offline.");
     }
 
     else if (portOpen && processRunning) {
@@ -384,7 +393,7 @@ public class Bot extends ListenerAdapter {
 
     } catch (IOException | InterruptedException | NumberFormatException e) {
       event.getChannel().sendMessage("❌ Failed to read server logs.").queue();
-      logger.error("[BOT ERROR] Failed to read latest.log: " + e);      
+      logger.error("[BOT ERROR] Failed to read latest.log: " + e);
     }
     return playersOnline;
   }
