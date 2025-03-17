@@ -13,6 +13,7 @@ RUN mvn dependency:go-offline
 
 # Now copy the rest of the project
 COPY src ./src
+COPY ../Server /app/Server
 
 # Build the project
 RUN mvn clean package
