@@ -23,7 +23,12 @@ FROM eclipse-temurin:23-jre
 WORKDIR /app
 
 # Copy only the final JAR from the build stage
-COPY  --from=build /app/target/minecraft-discord-bot.jar server.jar
+COPY  --from=build /app/target/minecraft-discord-bot.jar app.jar
+
+COPY --from=build /app/Server /app/Server
+
+WORKDIR /app
+
 
 # Expose ports (for later networking)
 EXPOSE 25565
