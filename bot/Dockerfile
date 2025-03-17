@@ -34,4 +34,4 @@ WORKDIR /app
 EXPOSE 25565
 
 # 4. Run the Application
-CMD [ "java", "-jar", "server.jar" ]
+CMD [ "java", "-jar", "app.jar" ]
