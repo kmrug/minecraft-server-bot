@@ -136,9 +136,16 @@ public class Bot extends ListenerAdapter {
 
       // Start the server process
       ProcessBuilder processBuilder = new ProcessBuilder(
-          "java", "-Xmx1024M", "-Xms1024M", "-jar", serverJar.getAbsolutePath(), "nogui");
+          "java", "-Xmx1024M", "-Xms1024M", "-jar", "/app/Server/server.jar", "nogui");
 
-      processBuilder.directory(serverJar.getParentFile()); // set working dir
+          processBuilder.directory(new File("/app/Server")); // set working dir
+
+      // // Start the server process
+      // ProcessBuilder processBuilder = new ProcessBuilder(
+      // "java", "-Xmx1024M", "-Xms1024M", "-jar", serverJar.getAbsolutePath(),
+      // "nogui");
+
+      // processBuilder.directory(serverJar.getParentFile()); // set working dir
       processBuilder.redirectOutput(logFile);
       processBuilder.redirectError(logFile);
 
@@ -170,7 +177,8 @@ public class Bot extends ListenerAdapter {
               DecimalFormat df = new DecimalFormat("0.00"); // Format to 2 decimal places
               event.getChannel()
                   .sendMessage(
-                      "✅ Minecraft server is ready! (Initialized in " + df.format(executionTimeInSeconds) + " seconds.)")
+                      "✅ Minecraft server is ready! (Initialized in " + df.format(executionTimeInSeconds)
+                          + " seconds.)")
                   .queue();
               break;
 
