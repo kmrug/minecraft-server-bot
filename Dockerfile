@@ -1,35 +1,38 @@
 # Use full JDK to ensure Java is available
 FROM eclipse-temurin:23-jdk AS build
-WORKDIR /app/bot  # ✅ Set working directory to bot/
+
+# ✅ Set base working directory
+WORKDIR /app
 
 # Install Maven
 RUN apt-get update && apt-get install -y maven
 
-# Copy Maven configuration first for caching
-COPY bot/pom.xml ./  
+# ✅ Copy the entire bot directory to preserve structure
+COPY bot /app/bot  
+
+# ✅ Set working directory to bot/ to run Maven commands
+WORKDIR /app/bot  
 
 # ✅ Download dependencies (inside bot/)
 RUN mvn dependency:go-offline
 
-# Now copy the bot's source code (inside bot/)
-COPY bot/src ./src
-
-# Move back to root to copy the Minecraft Server files
-WORKDIR /app
-COPY Server /app/Server  
-
-# ✅ Move back to bot/ to build the bot
-WORKDIR /app/bot
+# ✅ Build the bot (inside bot/)
 RUN mvn clean package  
+
+# ✅ Move back to /app to prepare runtime
+WORKDIR /app
+
+# ✅ Copy the Minecraft Server files separately
+COPY Server /app/Server  
 
 # Use JDK in runtime to ensure Java is available
 FROM eclipse-temurin:23-jdk
 WORKDIR /app
 
-# Copy only the final JAR from the build stage
+# ✅ Copy only the final JAR from the build stage
 COPY --from=build /app/bot/target/minecraft-discord-bot.jar app.jar
 
-# Copy the Minecraft Server folder
+# ✅ Copy the Minecraft Server folder
 COPY --from=build /app/Server /app/Server
 
 # Set working directory for running the bot
