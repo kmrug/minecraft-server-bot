@@ -34,10 +34,6 @@ COPY --from=build /app/target/minecraft-discord-bot.jar app.jar
 # ✅ Copy the Minecraft Server folder
 COPY --from=build /app/Server /app/Server
 
-# ✅ Ensure Java has execution permissions for the Minecraft server
-RUN chmod +x /app/Server/server.jar
-RUN chmod -R 777 /app/Server
-
 # ✅ Set working directory for running Minecraft server
 WORKDIR /app/Server
 
