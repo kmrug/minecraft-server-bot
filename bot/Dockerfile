@@ -1,4 +1,4 @@
-# Base Stage
+# Use full JDK to ensure Java is available
 FROM eclipse-temurin:23-jdk AS build
 WORKDIR /app
 
@@ -6,26 +6,33 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y maven
 
 # Copy Maven configuration first for caching
-COPY pom.xml ./
+COPY pom.xml ./  
 
-# Download dependencies
-RUN mvn dependency:go-offline
+# Download dependencies  
+RUN mvn dependency:go-offline  
 
-# Now copy the rest of the project
-COPY src ./src
+# Now copy the rest of the project  
+COPY src ./src  
+COPY Server /app/Server  
 
-# Build the project
-RUN mvn clean package
+# Build the project  
+RUN mvn clean package  
 
-# Runtime Stage
-FROM eclipse-temurin:23-jre
+# ✅ Use JDK in runtime to ensure Java is available
+FROM eclipse-temurin:23-jdk
 WORKDIR /app
 
 # Copy only the final JAR from the build stage
-COPY  --from=build /app/target/minecraft-discord-bot.jar app.jar
+COPY --from=build /app/target/minecraft-discord-bot.jar app.jar
 
-# Expose ports (for later networking)
+# ✅ Copy the Minecraft Server folder
+COPY --from=build /app/Server /app/Server
+
+# ✅ Set working directory for running the bot
+WORKDIR /app
+
+# ✅ Expose the Minecraft server port
 EXPOSE 25565
 
-# 4. Run the Application
-CMD [ "java", "-jar", "app.jar" ]
+# ✅ Run both the bot and the Minecraft server in parallel
+CMD ["java", "-jar", "app.jar"]
