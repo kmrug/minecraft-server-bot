@@ -2,12 +2,11 @@ services:
 
   minecraft-bot:
     container_name: minecraft-discord-bot
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: .      
     env_file:
       - .env
     volumes:
+      - Server:/app/Server # Minecraft server file persists (Direct volume bind to PC dir)
       - bot_logs:/app/logs # New volume to store bot logs
     ports:
       - "25565:25565" # Maps container port 25565 to host port 25565
