@@ -42,4 +42,4 @@ WORKDIR /app
 EXPOSE 25565
 
 # Run only the java app, playit is handled by compose.
-CMD java -jar app.jar
+CMD ["java", "-jar", "app.jar"]
