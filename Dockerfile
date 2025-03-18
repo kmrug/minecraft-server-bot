@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y maven
 COPY bot/pom.xml ./  
 
 # Download dependencies  
-RUN mvn dependencies:go-offline
+RUN mvn -f bot/pom.xml dependency:go-offline
 
 # Now copy the bot's source code
 COPY bot/src ./src
@@ -18,7 +18,7 @@ COPY bot/src ./src
 COPY Server /app/Server  
 
 # Build the bot  
-RUN mvn clean package  
+RUN mvn -f bot/pom.xml clean package  
 
 # Use JDK in runtime to ensure Java is available
 FROM eclipse-temurin:23-jdk
