@@ -136,7 +136,7 @@ public class Bot extends ListenerAdapter {
 
       // Start the server process
       ProcessBuilder processBuilder = new ProcessBuilder(
-          "java", "-Xmx256M", "-Xms256M", "-jar", serverJar.getAbsolutePath(),
+          "java", "-Xmx1024M", "-Xms1024M", "-jar", serverJar.getAbsolutePath(),
           "nogui");
 
       processBuilder.directory(serverJar.getParentFile()); // set working dir
