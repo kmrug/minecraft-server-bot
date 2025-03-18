@@ -1,6 +1,0 @@
-{
-  "build": {
-    "dockerfile": "bot/Dockerfile",
-    "context": "bot"
-  }
-}
