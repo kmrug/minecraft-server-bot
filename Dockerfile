@@ -5,7 +5,7 @@ FROM eclipse-temurin:23-jdk AS build
 WORKDIR /app
 
 # Install required dependencies
-RUN apt-get update && apt-get install -y maven curl gnupg unzip software-properties-common
+RUN apt-get update && apt-get install -y maven curl gnupg software-properties-common
 
 # ✅ Install Playit.gg TCP tunneling agent for Port Forwarding as Railway does not natively support it
 RUN curl -SsL https://playit-cloud.github.io/ppa/key.gpg | gpg --dearmor | tee /etc/apt/trusted.gpg.d/playit.gpg >/dev/null && \
@@ -48,4 +48,4 @@ WORKDIR /app
 EXPOSE 25565
 
 # Run both the bot and the Minecraft server in parallel
-CMD playit & java -jar app.jar
+CMD ["java", "-jar", "app.jar"]

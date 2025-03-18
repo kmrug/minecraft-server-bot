@@ -13,5 +13,12 @@ services:
     stdin_open: true
     tty: true
 
+  playit:
+    image: ghcr.io/playit-cloud/playit-agent:0.15
+    network_mode: host  # Allows Playit to manage networking properly
+    env_file:
+      - .env
+    environment:
+      - SECRET_KEY=${PLAYIT_SECRET}  # Use Railway or .env variable
 volumes:
   bot_logs: # This defines a named volume
