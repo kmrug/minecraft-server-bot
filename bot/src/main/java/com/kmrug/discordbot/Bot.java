@@ -5,7 +5,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
@@ -102,32 +101,6 @@ public class Bot extends ListenerAdapter {
   }
 
   public void startMinecraftServer(SlashCommandInteractionEvent event) {
-
-    // Debug: Log the current directory contents before starting the server
-    File serverDir = new File("/app/Server");
-    if (!serverDir.exists()) {
-      System.out.println("[DEBUG] Server directory does NOT exist: " + serverDir.getAbsolutePath());
-    } else {
-      System.out.println("[DEBUG] Server directory exists: " + serverDir.getAbsolutePath());
-      System.out.println("[DEBUG] Listing contents of Server directory:");
-      for (File file : serverDir.listFiles()) {
-        System.out.println(" - " + file.getName());
-      }
-    }
-
-    // Debug: Check if Java is available
-    try {
-      ProcessBuilder checkJava = new ProcessBuilder("java", "-version");
-      checkJava.redirectErrorStream(true);
-      Process process = checkJava.start();
-      BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-      String line;
-      while ((line = reader.readLine()) != null) {
-        System.out.println("[DEBUG] Java Check: " + line);
-      }
-    } catch (IOException e) {
-      System.out.println("[DEBUG] Java command not found! " + e.getMessage());
-    }
 
     long startTime = System.currentTimeMillis(); // Start time
 
