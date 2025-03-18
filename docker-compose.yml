@@ -21,8 +21,8 @@ services:
     environment:
       - SECRET_KEY=${PLAYIT_SECRET}  # Use Railway or .env variable
     stdin_open: true  # ✅ Keep stdin open to capture logs
-    tty: true  # ✅ Force Playit to print logs to Railway logs
-    command: ["/bin/sh", "-c", "playit --verbose"]
+    tty: true  # ✅ Enable interactive logging
+    command: ["/usr/local/bin/playit", "run"]  # ✅ Run Playit in foreground
 
 volumes:
   bot_logs: # This defines a named volume
