@@ -4,11 +4,11 @@ FROM eclipse-temurin:23-jdk AS build
 # Set base working directory
 WORKDIR /app
 
-# Install Maven
-RUN apt-get update && apt-get install -y maven
+# Install required dependencies
+RUN apt-get update && apt-get install -y maven curl unzip
 
 # ✅ Install Playit.gg TCP tunneling agent for Port Forwarding as Railway does not natively support it
-RUN curl -o playit-linux.tar.gz https://playit.gg/downloads/playit-linux.tar.gz && \
+RUN curl -fsSL https://playit.gg/downloads/playit-linux.tar.gz -o playit-linux.tar.gz && \
     tar -xvzf playit-linux.tar.gz && \
     mv playit /usr/local/bin/playit && \
     chmod +x /usr/local/bin/playit
