@@ -2,9 +2,9 @@ services:
 
   minecraft-bot:
     container_name: minecraft-discord-bot
-    build: .      
-    env_file:
-      - bot/.env
+    build: .  
+    env_file: 
+      - .env
     volumes:
       - ./Server:/app/Server # Minecraft server file persists (Direct volume bind to PC dir)
       - bot_logs:/app/logs # New volume to store bot logs
