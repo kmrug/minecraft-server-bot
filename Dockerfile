@@ -16,6 +16,8 @@ RUN curl -SsL https://playit-cloud.github.io/ppa/key.gpg | gpg --dearmor | tee /
 # Verify Playit installation
 RUN which playit
 
+COPY --from=build /path/to/playit /usr/local/bin/playit
+
 # Copy the entire bot directory to preserve structure
 COPY bot /app/bot  
 
@@ -49,6 +51,8 @@ WORKDIR /app
 
 # Expose the Minecraft server port
 EXPOSE 25565
+
+RUN ls -l /usr/bin/playit || ls -l /usr/local/bin/playit || ls -l /bin/playit
 
 # Run both the bot and the Minecraft server in parallel
 CMD playit agent & java -jar app.jar
