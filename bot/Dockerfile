@@ -13,8 +13,6 @@ RUN mvn dependency:go-offline
 
 # Now copy the rest of the project  
 COPY src ./src  
-
-# ✅ Copy the Server directory (now correctly inside bot/)  
 COPY Server /app/Server  
 
 # ✅ Now, set execution permissions after copying Server files
@@ -34,11 +32,11 @@ COPY --from=build /app/target/minecraft-discord-bot.jar app.jar
 # ✅ Copy the Minecraft Server folder
 COPY --from=build /app/Server /app/Server
 
-# ✅ Set working directory for running Minecraft server
-WORKDIR /app/Server
+# ✅ Set working directory for running the bot
+WORKDIR /app
 
 # ✅ Expose the Minecraft server port
 EXPOSE 25565
 
-# ✅ Run the Minecraft Server
-CMD ["java", "-jar", "server.jar"]
+# ✅ Run both the bot and the Minecraft server in parallel
+CMD ["java", "-jar", "app.jar"]
