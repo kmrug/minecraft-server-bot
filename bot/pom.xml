@@ -101,7 +101,9 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.10.1</version> <!-- Updated to latest version of the compiler plugin -->
         <configuration>
-          <release>23</release> <!-- Specify Java 21 for source compatibility -->
+          <source>23</source>
+          <target>23</target>
+          <release>23</release>
         </configuration>
       </plugin>
 
