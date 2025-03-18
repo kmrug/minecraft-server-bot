@@ -15,7 +15,7 @@ RUN mvn dependency:go-offline
 COPY src ./src
 
 # Copy `Server/` from the PARENT DIRECTORY (`../Server`)
-COPY ../Server /app/Server  
+COPY ./Server /app/Server  
 
 # Build the bot  
 RUN mvn clean package  

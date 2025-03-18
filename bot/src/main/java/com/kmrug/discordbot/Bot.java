@@ -172,7 +172,6 @@ public class Bot extends ListenerAdapter {
       processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
       processBuilder.redirectError(ProcessBuilder.Redirect.INHERIT);
       serverProcess = processBuilder.start();
-      // serverProcess.waitFor();
 
       // Wait for server to be ready for monitoring latest.log
       boolean serverReady = false;
