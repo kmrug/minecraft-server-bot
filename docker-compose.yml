@@ -2,7 +2,9 @@ services:
 
   minecraft-bot:
     container_name: minecraft-discord-bot
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     env_file:
       - .env
     volumes:

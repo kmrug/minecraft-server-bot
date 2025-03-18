@@ -6,15 +6,15 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y maven
 
 # Copy Maven configuration first for caching
-COPY pom.xml ./  
+COPY bot/pom.xml ./  
 
 # Download dependencies  
 RUN mvn dependency:go-offline  
 
 # Now copy the bot's source code
-COPY src ./src
+COPY bot/src ./src
 
-# Copy `Server/` from the PARENT DIRECTORY (`../Server`)
+# Copy `Server/` from the ROOT DIRECTORY (`Server`)
 COPY Server /app/Server  
 
 # Build the bot  
