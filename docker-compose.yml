@@ -20,7 +20,9 @@ services:
       - .env
     environment:
       - SECRET_KEY=${PLAYIT_SECRET}  # Use Railway or .env variable
-    command: ["playit", "--verbose"]
+    stdin_open: true  # ✅ Keep stdin open to capture logs
+    tty: true  # ✅ Force Playit to print logs to Railway logs
+    command: ["/bin/sh", "-c", "playit --verbose"]
 
 volumes:
   bot_logs: # This defines a named volume
