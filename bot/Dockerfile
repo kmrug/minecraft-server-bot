@@ -5,6 +5,10 @@ WORKDIR /app
 # Install Maven
 RUN apt-get update && apt-get install -y maven
 
+# Ensure Java and Minecraft server have execution permissions
+RUN chmod +x /app/Server/server.jar
+RUN chmod -R 777 /app/Server
+
 # Copy Maven configuration first for caching
 COPY pom.xml ./
 
