@@ -41,4 +41,4 @@ WORKDIR /app/Server
 EXPOSE 25565
 
 # ✅ Run the Minecraft Server
-CMD ["java", "-jar", "app.jar"]
+CMD ["java", "-jar", "server.jar"]
