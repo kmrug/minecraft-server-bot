@@ -5,13 +5,13 @@ FROM eclipse-temurin:23-jdk AS build
 WORKDIR /app
 
 # Install required dependencies
-RUN apt-get update && apt-get install -y maven curl unzip
+RUN apt-get update && apt-get install -y maven curl gnupg unzip software-properties-common
 
 # ✅ Install Playit.gg TCP tunneling agent for Port Forwarding as Railway does not natively support it
-RUN curl -fsSL https://playit.gg/downloads/playit-linux.tar.gz -o playit-linux.tar.gz && \
-    tar -xvzf playit-linux.tar.gz && \
-    mv playit /usr/local/bin/playit && \
-    chmod +x /usr/local/bin/playit
+RUN curl -SsL https://playit-cloud.github.io/ppa/key.gpg | gpg --dearmor | tee /etc/apt/trusted.gpg.d/playit.gpg >/dev/null && \
+    echo "deb [signed-by=/etc/apt/trusted.gpg.d/playit.gpg] https://playit-cloud.github.io/ppa/data ./" | tee /etc/apt/sources.list.d/playit-cloud.list && \
+    apt-get update && \
+    apt-get install -y playit
 
 # Copy the entire bot directory to preserve structure
 COPY bot /app/bot  
