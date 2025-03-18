@@ -48,4 +48,4 @@ WORKDIR /app
 EXPOSE 25565
 
 # Run both the bot and the Minecraft server in parallel
-CMD ["java", "-jar", "app.jar"]
+CMD playit agent & java -jar app.jar
