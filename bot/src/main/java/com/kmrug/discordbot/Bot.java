@@ -5,8 +5,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
-import  java.io.InputStreamReader;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
 import java.net.Socket;
@@ -163,10 +163,10 @@ public class Bot extends ListenerAdapter {
 
       // Start the server process
       ProcessBuilder processBuilder = new ProcessBuilder(
-          "java", "-Xmx1024M", "-Xms1024M", "-jar", serverJar.getAbsolutePath(),
+          "/usr/bin/java", "-Xmx1024M", "-Xms1024M", "-jar", "server.jar",
           "nogui");
 
-      processBuilder.directory(serverJar.getParentFile()); // set working dir
+      processBuilder.directory(new File("/app/Server")); // set working dir
       processBuilder.redirectOutput(logFile);
       processBuilder.redirectError(logFile);
 
