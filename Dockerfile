@@ -5,36 +5,25 @@ FROM eclipse-temurin:23-jdk AS build
 WORKDIR /app
 
 # Install required dependencies
-RUN apt-get update && apt-get install -y maven curl gnupg software-properties-common
-
-# Install Playit inside the Docker image
-RUN curl -SsL https://playit-cloud.github.io/ppa/key.gpg | gpg --dearmor | tee /etc/apt/trusted.gpg.d/playit.gpg >/dev/null && \
-    echo "deb [signed-by=/etc/apt/trusted.gpg.d/playit.gpg] https://playit-cloud.github.io/ppa/data ./" | tee /etc/apt/sources.list.d/playit-cloud.list && \
-    apt-get update && \
-    apt-get install -y playit
-
-# Verify Playit installation
-RUN which playit
-
-COPY --from=build /path/to/playit /usr/local/bin/playit
+RUN apt-get update && apt-get install -y maven
 
 # Copy the entire bot directory to preserve structure
-COPY bot /app/bot  
+COPY bot /app/bot
 
 # Set working directory to bot/ to run Maven commands
-WORKDIR /app/bot  
+WORKDIR /app/bot
 
 # Download dependencies (inside bot/)
 RUN mvn dependency:go-offline
 
 # Build the bot (inside bot/)
-RUN mvn clean package  
+RUN mvn clean package
 
 # Move back to /app to prepare runtime
 WORKDIR /app
 
 # Copy the Minecraft Server files separately
-COPY Server /app/Server  
+COPY Server /app/Server
 
 # Use JDK in runtime to ensure Java is available
 FROM eclipse-temurin:23-jdk
@@ -52,7 +41,5 @@ WORKDIR /app
 # Expose the Minecraft server port
 EXPOSE 25565
 
-RUN ls -l /usr/bin/playit || ls -l /usr/local/bin/playit || ls -l /bin/playit
-
-# Run both the bot and the Minecraft server in parallel
-CMD playit agent & java -jar app.jar
+# Run only the java app, playit is handled by compose.
+CMD java -jar app.jar
