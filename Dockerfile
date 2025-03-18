@@ -14,7 +14,7 @@ RUN curl -SsL https://playit-cloud.github.io/ppa/key.gpg | gpg --dearmor | tee /
     apt-get install -y playit
 
 # Verify Playit installation
-RUN playit --version
+RUN which playit
 
 # Copy the entire bot directory to preserve structure
 COPY bot /app/bot  
