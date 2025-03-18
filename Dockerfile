@@ -7,6 +7,12 @@ WORKDIR /app
 # Install Maven
 RUN apt-get update && apt-get install -y maven
 
+# ✅ Install Playit.gg TCP tunneling agent for Port Forwarding as Railway does not natively support it
+RUN curl -o playit-linux.tar.gz https://playit.gg/downloads/playit-linux.tar.gz && \
+    tar -xvzf playit-linux.tar.gz && \
+    mv playit /usr/local/bin/playit && \
+    chmod +x /usr/local/bin/playit
+
 # Copy the entire bot directory to preserve structure
 COPY bot /app/bot  
 
@@ -42,4 +48,4 @@ WORKDIR /app
 EXPOSE 25565
 
 # Run both the bot and the Minecraft server in parallel
-CMD ["java", "-jar", "app.jar"] 
+CMD playit & java -jar app.jar
