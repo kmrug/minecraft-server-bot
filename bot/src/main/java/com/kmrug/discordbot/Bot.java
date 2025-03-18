@@ -163,26 +163,15 @@ public class Bot extends ListenerAdapter {
 
       // Start the server process
       ProcessBuilder processBuilder = new ProcessBuilder(
-          "/usr/bin/java", "-Xmx1024M", "-Xms1024M", "-jar", "server.jar",
+          "java", "-Xmx1024M", "-Xms1024M", "-jar", "server.jar",
           "nogui");
 
       processBuilder.directory(new File("/app/Server")); // set working dir
-      processBuilder.redirectOutput(logFile);
-      processBuilder.redirectError(logFile);
 
       // Redirect output to see server logs in bot console
       processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
       processBuilder.redirectError(ProcessBuilder.Redirect.INHERIT);
       serverProcess = processBuilder.start();
-
-      // BufferedReader reader = new BufferedReader(new InputStreamReader(serverProcess.getInputStream()));
-      // String line;
-      // while ((line = reader.readLine()) != null) {
-      //   System.out.println("[DEBUG] Server Output: " + line);
-      // }
-
-      // int exitCode = serverProcess.waitFor();
-      // System.out.println("[DEBUG] Minecraft Server exited with code: " + exitCode);
 
       // Wait for server to be ready for monitoring latest.log
       boolean serverReady = false;
