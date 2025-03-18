@@ -12,6 +12,7 @@ import java.lang.management.RuntimeMXBean;
 import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -174,49 +175,49 @@ public class Bot extends ListenerAdapter {
       processBuilder.redirectError(ProcessBuilder.Redirect.INHERIT);
       serverProcess = processBuilder.start();
 
-      BufferedReader reader = new BufferedReader(new InputStreamReader(serverProcess.getInputStream()));
-      String line;
-      while ((line = reader.readLine()) != null) {
-          System.out.println("[DEBUG] Server Output: " + line);
-      }
-  
-      int exitCode = serverProcess.waitFor();
-      System.out.println("[DEBUG] Minecraft Server exited with code: " + exitCode);
+      // BufferedReader reader = new BufferedReader(new InputStreamReader(serverProcess.getInputStream()));
+      // String line;
+      // while ((line = reader.readLine()) != null) {
+      //   System.out.println("[DEBUG] Server Output: " + line);
+      // }
+
+      // int exitCode = serverProcess.waitFor();
+      // System.out.println("[DEBUG] Minecraft Server exited with code: " + exitCode);
 
       // Wait for server to be ready for monitoring latest.log
       boolean serverReady = false;
 
       Pattern serverStarted = Pattern.compile("Done \\((\\d+\\.\\d+)s\\)! For help, type \"help\"");
 
-      // while (!serverReady) {
-      //   Thread.sleep(1000);
-      //   if (!logFile.exists()) {
-      //     continue;
-      //   }
+      while (!serverReady) {
+        Thread.sleep(1000);
+        if (!logFile.exists()) {
+          continue;
+        }
 
-      //   try (BufferedReader reader = new BufferedReader(new FileReader(logFile))) {
-      //     String line;
-      //     while ((line = reader.readLine()) != null) {
-      //       Matcher matcher = serverStarted.matcher(line);
-      //       if (matcher.find()) {
-      //         serverReady = true;
-      //         long endTime = System.currentTimeMillis(); // End time
-      //         long executionTime = endTime - startTime; // Calculate elapsed time
-      //         double executionTimeInSeconds = executionTime / 1000.0;
-      //         DecimalFormat df = new DecimalFormat("0.00"); // Format to 2 decimal places
-      //         event.getChannel()
-      //             .sendMessage(
-      //                 "✅ Minecraft server is ready! (Initialized in " + df.format(executionTimeInSeconds)
-      //                     + " seconds.)")
-      //             .queue();
-      //         break;
+        try (BufferedReader reader = new BufferedReader(new FileReader(logFile))) {
+          String line;
+          while ((line = reader.readLine()) != null) {
+            Matcher matcher = serverStarted.matcher(line);
+            if (matcher.find()) {
+              serverReady = true;
+              long endTime = System.currentTimeMillis(); // End time
+              long executionTime = endTime - startTime; // Calculate elapsed time
+              double executionTimeInSeconds = executionTime / 1000.0;
+              DecimalFormat df = new DecimalFormat("0.00"); // Format to 2 decimal places
+              event.getChannel()
+                  .sendMessage(
+                      "✅ Minecraft server is ready! (Initialized in " + df.format(executionTimeInSeconds)
+                          + " seconds.)")
+                  .queue();
+              break;
 
-      //       }
-      //     }
-      //   } catch (IOException e) {
-      //     logger.error("[BOT ERROR] Failed to read latest.log: " + e);
-      //   }
-      // }
+            }
+          }
+        } catch (IOException e) {
+          logger.error("[BOT ERROR] Failed to read latest.log: " + e);
+        }
+      }
 
       idleShutdownManager.startTimer();
 
