@@ -163,10 +163,10 @@ public class Bot extends ListenerAdapter {
 
       // Start the server process
       ProcessBuilder processBuilder = new ProcessBuilder(
-          "java", "-Xmx256M", "-Xms256M", "-jar", "server.jar",
+          "java", "-Xmx256M", "-Xms256M", "-jar", serverJar.getAbsolutePath(),
           "nogui");
 
-      processBuilder.directory(new File("/app/Server")); // set working dir
+      processBuilder.directory(serverJar.getParentFile()); // set working dir
 
       // Redirect output to see server logs in bot console
       processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
