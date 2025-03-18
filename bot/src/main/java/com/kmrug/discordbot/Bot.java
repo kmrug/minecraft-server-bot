@@ -163,7 +163,7 @@ public class Bot extends ListenerAdapter {
 
       // Start the server process
       ProcessBuilder processBuilder = new ProcessBuilder(
-          "java", "-Xmx400M", "-Xms400M", "-jar", "server.jar",
+          "java", "-Xmx256M", "-Xms256M", "-jar", "server.jar",
           "nogui");
 
       processBuilder.directory(new File("/app/Server")); // set working dir
@@ -172,6 +172,7 @@ public class Bot extends ListenerAdapter {
       processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
       processBuilder.redirectError(ProcessBuilder.Redirect.INHERIT);
       serverProcess = processBuilder.start();
+      // serverProcess.waitFor();
 
       // Wait for server to be ready for monitoring latest.log
       boolean serverReady = false;
