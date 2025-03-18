@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y maven
 COPY bot/pom.xml ./  
 
 # Download dependencies  
-RUN mvn dependency:go-offline  
+RUN mvn -B -DskipTests clean install   
 
 # Now copy the bot's source code
 COPY bot/src ./src
