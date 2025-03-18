@@ -1,5 +1,5 @@
 # Use full JDK to ensure Java is available
-FROM eclipse-temurin:23-jdk AS build
+FROM eclipse-temurin:21-jdk AS build
 
 # ✅ Set base working directory
 WORKDIR /app
@@ -26,7 +26,7 @@ WORKDIR /app
 COPY Server /app/Server  
 
 # Use JDK in runtime to ensure Java is available
-FROM eclipse-temurin:23-jdk
+FROM eclipse-temurin:21-jdk
 WORKDIR /app
 
 # ✅ Copy only the final JAR from the build stage
@@ -42,4 +42,4 @@ WORKDIR /app
 EXPOSE 25565
 
 # Run both the bot and the Minecraft server in parallel
-CMD ["java", "-jar", "app.jar"]
+CMD ["java", "-jar", "app.jar"] 
