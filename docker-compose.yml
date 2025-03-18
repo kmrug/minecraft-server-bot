@@ -20,8 +20,7 @@ services:
       - .env
     environment:
       - SECRET_KEY=${PLAYIT_SECRET}  # Use Railway or .env variable
-    command: ["playit"]
-    stdin_open: true
-    tty: true
+    command: ["playit", "--verbose"]
+
 volumes:
   bot_logs: # This defines a named volume
