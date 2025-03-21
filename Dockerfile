@@ -5,7 +5,10 @@ FROM eclipse-temurin:23-jdk AS build
 WORKDIR /app
 
 # Install required dependencies
-RUN apt-get update && apt-get install -y maven
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y maven && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # Copy the entire bot directory to preserve structure
 COPY bot /app/bot
