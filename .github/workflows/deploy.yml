@@ -28,5 +28,5 @@ jobs:
           --document-name "AWS-RunShellScript" \
           --instance-ids "i-0711990baeff85669" \
           --comment "Deploying Minecraft Discord bot" \
-          --parameters commands=["cd /home/ubuntu/minecraft-server-bot && git config --global --add safe.directory /home/ubuntu/minecraft-server-bot && docker-compose down && git pull && docker-compose up -d"] \
+          --parameters commands=["export HOME=/home/ubuntu && cd /home/ubuntu/minecraft-server-bot && git config --global --add safe.directory /home/ubuntu/minecraft-server-bot && docker-compose down && git pull && docker-compose up -d"] \
           --region eu-west-3
