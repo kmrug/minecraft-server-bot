@@ -1,26 +1,32 @@
-name: Deploy to EC2
+name: Deploy to AWS EC2
 
 on:
   push:
-    branches: [feature/aws-deployment]
+    branches:
+      - feature/aws-deployment
+
+permissions:
+  id-token: write
+  contents: read
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
+      - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Deploy via SSH
-        uses: appleboy/ssh-action@master
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
         with:
-          host: ${{secrets.EC2_HOST}}
-          username: ${{secrets.EC2_USER}}
-          key: ${{secrets.EC2_KEY}}
-          script: |
-            cd ~/minecraft-server-bot
-            git pull origin feature/aws-deployment
-            docker-compose down
-            docker-compose build
-            docker-compose up -d
+          role-to-assume: arn:aws:iam::871852866780:role/GitHub_Actions_Setup
+          aws-region: eu-west-3
+
+      - name: Run remote command via SSM
+        run: |
+          aws ssm send-command \
+          --document-name "AWS-RunShellScript" \
+          --instance-ids "i-0711990baeff85669" \
+          --comment "Deployinh Minecraft Discord bot" \
+          --parameters commands=["cd minecraft-server-bot && docker-compose down && git pull && docker-compose up -d"] \
+          --region eu-west-3
