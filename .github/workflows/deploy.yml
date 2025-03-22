@@ -46,7 +46,7 @@ jobs:
 
       - name: Run remote command via SSM
         run: |
-          COMMANDS=$(jq -c .commands ssm-commands.json)
+          COMMANDS=$(jq -c .commands .github/scripts/ssm-commands.json)
           aws ssm send-command \
           --document-name "AWS-RunShellScript" \
           --instance-ids "i-0711990baeff85669" \
