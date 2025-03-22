@@ -169,7 +169,7 @@ public class Bot extends ListenerAdapter {
               DecimalFormat df = new DecimalFormat("0.00"); // Format to 2 decimal places
               event.getChannel()
                   .sendMessage(
-                      "✅ Minecraft server is ready! (Initialized in " + df.format(executionTimeInSeconds)
+                      "✅ Minecraft server is up and ready! (Initialized in " + df.format(executionTimeInSeconds)
                           + " seconds.)")
                   .queue();
               break;
