@@ -4,6 +4,13 @@ on:
   push:
     branches:
       - dev
+    paths:
+      - 'bot/src/**'
+      - 'bot/target/**'
+      - 'bot/pom.xml'
+      - 'Dockerfile'
+      - 'docker-compose.yml'      
+      - '.github/workflows/deploy.yml'
 
 permissions:
   id-token: write
