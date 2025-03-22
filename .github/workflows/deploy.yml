@@ -1,0 +1,44 @@
+name: Deploy to AWS EC2
+
+on:
+  push:
+    branches:
+      - feature/aws-deployment
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: eu-west-3
+
+      - name: Run remote command via SSM
+        run: |
+          aws ssm send-command \
+          --document-name "AWS-RunShellScript" \
+          --instance-ids "i-0711990baeff85669" \
+          --comment "Deploying Minecraft Discord bot" \
+          --parameters '{
+            "commands": [
+              "export HOME=/home/ubuntu",
+              "cd /home/ubuntu/minecraft-server-bot",
+              "git config --global --add safe.directory /home/ubuntu/minecraft-server-bot",
+              "docker-compose down",
+              "docker image prune -af",
+              "git pull",
+              "docker-compose build --no-cache",
+              "docker-compose up -d"
+            ]
+          }' \
+          --region eu-west-3 \
+          --cloud-watch-output-config CloudWatchLogGroupName="SSMCommandLogs",CloudWatchOutputEnabled=true
