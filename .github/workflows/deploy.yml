@@ -20,6 +20,14 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+
+      - name: Notify start of deployment
+        run: |
+          curl -H "Content-Type: application/json" \
+          -X POST \
+          -d '{"content":"🚀 Deployment started for Minecraft Discord bot!"}' \
+          ${{ secrets.DISCORD_WEBHOOK_URL }}      
+
       - name: Checkout repo
         uses: actions/checkout@v4
 
@@ -28,6 +36,13 @@ jobs:
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
           aws-region: eu-west-3
+
+      - name: Notify deployment in progress
+        run: |
+          curl -H "Content-Type: application/json" \
+          -X POST \
+          -d '{"content":"📦 Running deployment steps on EC2 via AWS SSM..."}' \
+          ${{ secrets.DISCORD_WEBHOOK_URL }}  
 
       - name: Run remote command via SSM
         run: |
@@ -40,12 +55,28 @@ jobs:
               "export HOME=/home/ubuntu",
               "cd /home/ubuntu/minecraft-server-bot",
               "git config --global --add safe.directory /home/ubuntu/minecraft-server-bot",
-              "docker-compose down",
-              "docker image prune -af",
-              "git pull",
-              "docker-compose build --no-cache",
-              "docker-compose up -d"
+              "docker-compose down || curl -H \"Content-Type: application/json\" -X POST -d '{\"content\": \"❌ Failed  at \`docker-compose down\` step.\"}' ${{ secrets.DISCORD_WEBHOOK_URL }}",
+              "docker image prune -af || curl -H \"Content-Type: application/json\" -X POST -d '{\"content\": \"❌ Failed at \`docker image prune -af\` step.\"}' ${{ secrets.DISCORD_WEBHOOK_URL }}",
+              "git pull || curl -H \"Content-Type: application/json\" -X POST -d '{\"content\": \"❌ Failed at \`git pull\` step.\"}' ${{ secrets.DISCORD_WEBHOOK_URL }}",
+              "docker-compose build --no-cache || curl -H \"Content-Type: application/json\" -X POST -d '{\"content\": \"❌ Failed at \`docker-compose build --no-cache\` step.\"}' ${{ secrets.DISCORD_WEBHOOK_URL }}",
+              "docker-compose up -d || curl -H \"Content-Type: application/json\" -X POST -d '{\"content\": \"❌ Failed at \`docker-compose up -d\` step.\"}' ${{ secrets.DISCORD_WEBHOOK_URL }}"
             ]
           }' \
           --region eu-west-3 \
           --cloud-watch-output-config CloudWatchLogGroupName="SSMCommandLogs",CloudWatchOutputEnabled=true
+
+      - name: Notify deployment success
+        if: success()
+        run: |
+          curl -H "Content-Type: application/json" \
+               -X POST \
+               -d '{"content":"✅ Deployment completed successfully!"}' \
+               ${{ secrets.DISCORD_WEBHOOK_URL }}
+
+      - name: Notify deployment failure
+        if: failure()
+        run: |
+          curl -H "Content-Type: application/json" \
+               -X POST \
+               -d '{"content":"🚨 Deployment failed! Check your logs."}' \
+               ${{ secrets.DISCORD_WEBHOOK_URL }}
