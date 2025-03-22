@@ -85,8 +85,8 @@ public class Bot extends ListenerAdapter {
     jda.upsertCommand("serverstatus", "Checks if the Minecraft server is running").queue();
     jda.upsertCommand("playercount", "Displays the numbers of players online").queue();
 
-    // Start IdleShutdownManager with 60 minute timeout
-    idleShutdownManager = new IdleShutdownManager(botInstance, 60);
+    // Start IdleShutdownManager with 30 minute timeout
+    idleShutdownManager = new IdleShutdownManager(botInstance, 30);
   }
 
   public String getLogTimeStamp() {
@@ -257,22 +257,14 @@ public class Bot extends ListenerAdapter {
       return;
     }
 
-    try {
-      // Stop the minecraft server
-      stopMinecraftServer("ManualStop");
+    // Stop the minecraft server
+    stopMinecraftServer("ManualStop");
 
-      // Wait for a few seconds
-      Thread.sleep(3000);
-      event.getChannel().sendMessage("🛠️ Restarting Minecraft server").queue();
-      logger.info("Restarting Minecraft server...");
+    event.getChannel().sendMessage("🛠️ Restarting Minecraft server").queue();
+    logger.info("Restarting Minecraft server...");
 
-      // Start server
-      startMinecraftServer(event);
-
-    } catch (InterruptedException e) {
-      event.getChannel().sendMessage("❌ Server restart process was interrupted.").queue();
-      logger.error("[BOT ERROR] InterruptedException while restarting server: " + e);
-    }
+    // Start server
+    startMinecraftServer(event);
 
   }
 
@@ -288,49 +280,49 @@ public class Bot extends ListenerAdapter {
 
     // if (portOpen) {
 
-      OperatingSystemMXBean osBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+    OperatingSystemMXBean osBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
 
-      String archName = osBean.getArch();
-      double cpuLoad = osBean.getCpuLoad();
-      double systemLoad = osBean.getSystemLoadAverage(); // System CPU load (average over the last minute)
-      int processors = osBean.getAvailableProcessors();
-      long totalMemory = osBean.getTotalMemorySize() / (1024 * 1024); // Total memory in MB
-      long freeMemory = osBean.getFreeMemorySize() / (1024 * 1024); // Free memory in MB
-      long usedMemory = totalMemory - freeMemory; // Used RAM in MB
+    String archName = osBean.getArch();
+    double cpuLoad = osBean.getCpuLoad();
+    double systemLoad = osBean.getSystemLoadAverage(); // System CPU load (average over the last minute)
+    int processors = osBean.getAvailableProcessors();
+    long totalMemory = osBean.getTotalMemorySize() / (1024 * 1024); // Total memory in MB
+    long freeMemory = osBean.getFreeMemorySize() / (1024 * 1024); // Free memory in MB
+    long usedMemory = totalMemory - freeMemory; // Used RAM in MB
 
-      // Uptime calculation
-      RuntimeMXBean runtimeMXBean = ManagementFactory.getRuntimeMXBean();
-      long uptimeMillis = runtimeMXBean.getUptime();
-      String uptime = String.format("%02d hours, %02d minutes",
-          TimeUnit.MILLISECONDS.toHours(uptimeMillis),
-          TimeUnit.MILLISECONDS.toMinutes(uptimeMillis) % 60);
+    // Uptime calculation
+    RuntimeMXBean runtimeMXBean = ManagementFactory.getRuntimeMXBean();
+    long uptimeMillis = runtimeMXBean.getUptime();
+    String uptime = String.format("%02d hours, %02d minutes",
+        TimeUnit.MILLISECONDS.toHours(uptimeMillis),
+        TimeUnit.MILLISECONDS.toMinutes(uptimeMillis) % 60);
 
-      // Create Embed
-      EmbedBuilder embedBuilder = new EmbedBuilder();
-      embedBuilder.setTitle("Minecraft Server Status")
-          .setDescription("✅ Minecraft server is currently running and accepting connections!")
-          .setColor(Color.GREEN)
-          .addField("Uptime", uptime, false)
-          .addField("Arch Name", archName, false)
-          .addField("CPU Load", String.format("%.2f%%", cpuLoad * 100), false)
-          .addField("System Load Average", systemLoad == -1.0 ? "N/A" : String.format("%.2f%%", systemLoad * 100),
-              false)
-          .addField("Processors", String.format("%d", processors), false)
-          .addField("Total Memory", String.format("%d MB", totalMemory), true)
-          .addField("Used Memory", String.format("%d MB", usedMemory), true)
-          .addField("Free Memory", String.format("%d MB", freeMemory), true)
-          .setFooter("Keep calm and mine on ⛏️");
+    // Create Embed
+    EmbedBuilder embedBuilder = new EmbedBuilder();
+    embedBuilder.setTitle("Minecraft Server Status")
+        .setDescription("✅ Minecraft server is currently running and accepting connections!")
+        .setColor(Color.GREEN)
+        .addField("Uptime", uptime, false)
+        .addField("Arch Name", archName, false)
+        .addField("CPU Load", String.format("%.2f%%", cpuLoad * 100), false)
+        .addField("System Load Average", systemLoad == -1.0 ? "N/A" : String.format("%.2f%%", systemLoad * 100),
+            false)
+        .addField("Processors", String.format("%d", processors), false)
+        .addField("Total Memory", String.format("%d MB", totalMemory), true)
+        .addField("Used Memory", String.format("%d MB", usedMemory), true)
+        .addField("Free Memory", String.format("%d MB", freeMemory), true)
+        .setFooter("Keep calm and mine on ⛏️");
 
-      // Send Embed
-      event.getChannel().sendMessageEmbeds(embedBuilder.build()).queue();
+    // Send Embed
+    event.getChannel().sendMessageEmbeds(embedBuilder.build()).queue();
 
-      System.out.println("[BOT] Server is running and online");
-      logger.info("Server is running and online");
+    System.out.println("[BOT] Server is running and online");
+    logger.info("Server is running and online");
     // }
 
     // else if (!processRunning) {
-    //   event.getHook().sendMessage("⚠️ Minecraft server is offline").queue();
-    //   logger.warn("Server is offline.");
+    // event.getHook().sendMessage("⚠️ Minecraft server is offline").queue();
+    // logger.warn("Server is offline.");
     // }
 
   }
