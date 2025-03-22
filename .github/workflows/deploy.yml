@@ -14,12 +14,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::871852866780:role/GitHub_Actions_Setup
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
           aws-region: eu-west-3
 
       - name: Run remote command via SSM
