@@ -1,5 +1,7 @@
 # Minecraft Discord Bot
 
+[![Build Status](https://github.com/kmrug/minecraft-server-bot/actions/workflows/deploy.yml/badge.svg)](https://github.com/kmrug/minecraft-server-bot/actions/workflows/deploy.yml)
+
 A Discord bot that integrates with a Minecraft server to provide management commands like starting, stopping, restarting the server, fetching player count, and displaying server status.
 
 ## Features
