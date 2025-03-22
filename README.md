@@ -11,10 +11,10 @@ A Discord bot that integrates with a Minecraft server to provide management comm
 - ✅ Resource Monitoring (CPU, Memory usage)
 - ✅ Dockerization
 - ✅ Log4j Integration for logging
-- 🔄 Port Forwarding for Public Access (Planned)
+- ✅ Port Forwarding for Public Access
+- ✅ Deployment on AWS EC2
 - 🔄 Testing with JUnit (Planned)
 - 🔄 Spring Boot Integration (Planned)
-- 🔄 Deployment on AWS or other Cloud Platforms (Planned)
 
 ## Tech Stack
 
@@ -22,16 +22,17 @@ A Discord bot that integrates with a Minecraft server to provide management comm
 - Discord API
 - ProcessBuilder for server management
 - Docker
-- Log4j (Upcoming)
+- Log4j
+- AWS
 - Spring Boot (Upcoming)
-- AWS (Upcoming)
+- JUnit
 
 ## Getting Started
 
 ### Prerequisites
 - Java 17
 - Maven
-- Docker (Optional)
+- Docker
 - Discord Bot Token
 
 ### Setup Instructions
