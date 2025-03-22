@@ -3,7 +3,7 @@ name: Deploy to AWS EC2
 on:
   push:
     branches:
-      - feature/aws-deployment
+      - dev
 
 permissions:
   id-token: write
