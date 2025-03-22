@@ -281,7 +281,12 @@ public class Bot extends ListenerAdapter {
     boolean portOpen = isPortOpen("localhost", 25565);
     boolean processRunning = (serverProcess != null && serverProcess.isAlive());
 
-    if (portOpen) {
+    if (processRunning && !portOpen) {
+      event.getChannel().sendMessage("⚠️ Minecraft server is running, but the port is closed.").queue();
+      logger.error("[BOT WARNING] Server process is running, but port is closed.");
+    }
+
+    // if (portOpen) {
 
       OperatingSystemMXBean osBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
 
@@ -321,17 +326,12 @@ public class Bot extends ListenerAdapter {
 
       System.out.println("[BOT] Server is running and online");
       logger.info("Server is running and online");
-    }
+    // }
 
-    else if (processRunning && !portOpen) {
-      event.getChannel().sendMessage("⚠️ Minecraft server is running, but the port is closed.").queue();
-      logger.error("[BOT WARNING] Server process is running, but port is closed.");
-    }
-
-    else if (!processRunning) {
-      event.getHook().sendMessage("⚠️ Minecraft server is offline").queue();
-      logger.warn("Server is offline.");
-    }
+    // else if (!processRunning) {
+    //   event.getHook().sendMessage("⚠️ Minecraft server is offline").queue();
+    //   logger.warn("Server is offline.");
+    // }
 
   }
 
