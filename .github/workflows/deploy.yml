@@ -46,22 +46,12 @@ jobs:
 
       - name: Run remote command via SSM
         run: |
+          COMMANDS=$(jq -c .commands .github/scripts/ssm-commands.json)
           aws ssm send-command \
           --document-name "AWS-RunShellScript" \
           --instance-ids "i-0711990baeff85669" \
           --comment "Deploying Minecraft Discord bot" \
-          --parameters '{
-            "commands": [
-              "export HOME=/home/ubuntu",
-              "cd /home/ubuntu/minecraft-server-bot",
-              "git config --global --add safe.directory /home/ubuntu/minecraft-server-bot",
-              "docker-compose down || curl -H \"Content-Type: application/json\" -X POST -d '{\"content\": \"❌ Failed  at \`docker-compose down\` step.\"}' ${{ secrets.DISCORD_WEBHOOK_URL }}",
-              "docker image prune -af || curl -H \"Content-Type: application/json\" -X POST -d '{\"content\": \"❌ Failed at \`docker image prune -af\` step.\"}' ${{ secrets.DISCORD_WEBHOOK_URL }}",
-              "git pull || curl -H \"Content-Type: application/json\" -X POST -d '{\"content\": \"❌ Failed at \`git pull\` step.\"}' ${{ secrets.DISCORD_WEBHOOK_URL }}",
-              "docker-compose build --no-cache || curl -H \"Content-Type: application/json\" -X POST -d '{\"content\": \"❌ Failed at \`docker-compose build --no-cache\` step.\"}' ${{ secrets.DISCORD_WEBHOOK_URL }}",
-              "docker-compose up -d || curl -H \"Content-Type: application/json\" -X POST -d '{\"content\": \"❌ Failed at \`docker-compose up -d\` step.\"}' ${{ secrets.DISCORD_WEBHOOK_URL }}"
-            ]
-          }' \
+          --parameters "{\"commands\": $COMMANDS}" \
           --region eu-west-3 \
           --cloud-watch-output-config CloudWatchLogGroupName="SSMCommandLogs",CloudWatchOutputEnabled=true
 
