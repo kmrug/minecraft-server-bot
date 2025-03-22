@@ -25,7 +25,7 @@ A Discord bot that integrates with a Minecraft server to provide management comm
 - Log4j
 - AWS
 - Spring Boot (Upcoming)
-- JUnit
+- JUnit (Upcoming)
 
 ## Getting Started
 
