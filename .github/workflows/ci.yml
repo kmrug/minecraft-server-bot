@@ -1,4 +1,4 @@
-name: Run Java Tests
+name: Run Java Tests - CI
 
 on:
   push:
@@ -19,4 +19,5 @@ jobs:
           cache: maven
       
       - name: Build and run tests with Maven
+        working-directory: bot
         run: mvn -B clean test
