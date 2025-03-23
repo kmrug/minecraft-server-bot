@@ -34,7 +34,7 @@ public class IdleShutdownManagerTest {
 
   @Test
   public void testStopIsCalledAfterTimeout() throws InterruptedException {
-    idleShutdownManager = new IdleShutdownManager(mockBot, 1);
+    idleShutdownManager = new IdleShutdownManager(mockBot, 0);
     idleShutdownManager.startTimer();
 
     // Give time for task to run
