@@ -21,3 +21,76 @@
 [2025-03-23 21:20:12] [INFO] com.kmrug.discordbot.Bot = Player activity detected! Resetting idle timer...
 [2025-03-23 21:20:12] [INFO] com.kmrug.discordbot.Bot = Idle timer started...
 [2025-03-23 21:20:12] [INFO] com.kmrug.discordbot.Bot = Idle timer started...
+[2025-03-28 18:26:02] [INFO] com.kmrug.discordbot.Bot = Server is running and online
+[2025-03-28 18:26:02] [WARN] com.kmrug.discordbot.Bot = Minecraft server is already running!
+[2025-03-28 18:26:02] [WARN] com.kmrug.discordbot.Bot = This command can only be used in a text channel!
+[2025-03-28 18:26:02] [ERROR] com.kmrug.discordbot.Bot = [BOT ERROR] Failed to start server: java.io.IOException: Cannot run program "java" (in directory ".\Server"): CreateProcess error=267, The directory name is invalid
+[2025-03-28 18:26:02] [WARN] com.kmrug.discordbot.Bot = This command can only be used in a text channel!
+[2025-03-28 18:26:02] [ERROR] com.kmrug.discordbot.Bot = [BOT ERROR] Failed to start server: java.io.IOException: Cannot run program "java" (in directory ".\Server"): CreateProcess error=267, The directory name is invalid
+[2025-03-28 18:26:02] [WARN] com.kmrug.discordbot.Bot = This command can only be used in a text channel!
+[2025-03-28 18:26:02] [ERROR] com.kmrug.discordbot.Bot = [BOT ERROR] Failed to start server: java.io.IOException: Cannot run program "java" (in directory ".\Server"): CreateProcess error=267, The directory name is invalid
+[2025-03-28 18:26:02] [ERROR] com.kmrug.discordbot.Bot = [BOT WARNING] Server process is running, but port is closed.
+[2025-03-28 18:27:15] [INFO] com.kmrug.discordbot.Bot = Server is running and online
+[2025-03-28 18:27:15] [WARN] com.kmrug.discordbot.Bot = Minecraft server is already running!
+[2025-03-28 18:27:15] [WARN] com.kmrug.discordbot.Bot = This command can only be used in a text channel!
+[2025-03-28 18:27:15] [ERROR] com.kmrug.discordbot.Bot = [BOT ERROR] Failed to start server: java.io.IOException: Cannot run program "java" (in directory ".\Server"): CreateProcess error=267, The directory name is invalid
+[2025-03-28 18:27:15] [WARN] com.kmrug.discordbot.Bot = This command can only be used in a text channel!
+[2025-03-28 18:27:15] [ERROR] com.kmrug.discordbot.Bot = [BOT ERROR] Failed to start server: java.io.IOException: Cannot run program "java" (in directory ".\Server"): CreateProcess error=267, The directory name is invalid
+[2025-03-28 18:27:15] [WARN] com.kmrug.discordbot.Bot = This command can only be used in a text channel!
+[2025-03-28 18:27:15] [ERROR] com.kmrug.discordbot.Bot = [BOT ERROR] Failed to start server: java.io.IOException: Cannot run program "java" (in directory ".\Server"): CreateProcess error=267, The directory name is invalid
+[2025-03-28 18:27:15] [ERROR] com.kmrug.discordbot.Bot = [BOT WARNING] Server process is running, but port is closed.
+[2025-03-28 18:28:04] [INFO] com.kmrug.discordbot.Bot = Server is running and online
+[2025-03-28 18:28:04] [WARN] com.kmrug.discordbot.Bot = Minecraft server is already running!
+[2025-03-28 18:28:04] [WARN] com.kmrug.discordbot.Bot = This command can only be used in a text channel!
+[2025-03-28 18:28:04] [ERROR] com.kmrug.discordbot.Bot = [BOT ERROR] Failed to start server: java.io.IOException: Cannot run program "java" (in directory ".\Server"): CreateProcess error=267, The directory name is invalid
+[2025-03-28 18:28:04] [WARN] com.kmrug.discordbot.Bot = This command can only be used in a text channel!
+[2025-03-28 18:28:04] [ERROR] com.kmrug.discordbot.Bot = [BOT ERROR] Failed to start server: java.io.IOException: Cannot run program "java" (in directory ".\Server"): CreateProcess error=267, The directory name is invalid
+[2025-03-28 18:28:04] [WARN] com.kmrug.discordbot.Bot = This command can only be used in a text channel!
+[2025-03-28 18:28:04] [ERROR] com.kmrug.discordbot.Bot = [BOT ERROR] Failed to start server: java.io.IOException: Cannot run program "java" (in directory ".\Server"): CreateProcess error=267, The directory name is invalid
+[2025-03-28 18:28:04] [ERROR] com.kmrug.discordbot.Bot = [BOT WARNING] Server process is running, but port is closed.
+[2025-03-28 18:29:08] [INFO] com.kmrug.discordbot.Bot = Server is running and online
+[2025-03-28 18:29:08] [WARN] com.kmrug.discordbot.Bot = Minecraft server is already running!
+[2025-03-28 18:29:08] [WARN] com.kmrug.discordbot.Bot = This command can only be used in a text channel!
+[2025-03-28 18:29:08] [ERROR] com.kmrug.discordbot.Bot = [BOT ERROR] Failed to start server: java.io.IOException: Cannot run program "java" (in directory ".\Server"): CreateProcess error=267, The directory name is invalid
+[2025-03-28 18:29:08] [WARN] com.kmrug.discordbot.Bot = This command can only be used in a text channel!
+[2025-03-28 18:29:08] [ERROR] com.kmrug.discordbot.Bot = [BOT ERROR] Failed to start server: java.io.IOException: Cannot run program "java" (in directory ".\Server"): CreateProcess error=267, The directory name is invalid
+[2025-03-28 18:29:08] [WARN] com.kmrug.discordbot.Bot = This command can only be used in a text channel!
+[2025-03-28 18:29:08] [ERROR] com.kmrug.discordbot.Bot = [BOT ERROR] Failed to start server: java.io.IOException: Cannot run program "java" (in directory ".\Server"): CreateProcess error=267, The directory name is invalid
+[2025-03-28 18:29:08] [ERROR] com.kmrug.discordbot.Bot = [BOT WARNING] Server process is running, but port is closed.
+[2025-03-28 18:30:50] [ERROR] com.kmrug.discordbot.Bot = [BOT WARNING] Server process is running, but port is closed.
+[2025-03-28 18:34:59] [INFO] com.kmrug.discordbot.Bot = Server is running and online
+[2025-03-28 18:34:59] [WARN] com.kmrug.discordbot.Bot = Minecraft server is already running!
+[2025-03-28 18:34:59] [WARN] com.kmrug.discordbot.Bot = This command can only be used in a text channel!
+[2025-03-28 18:34:59] [ERROR] com.kmrug.discordbot.Bot = [BOT ERROR] Failed to start server: java.io.IOException: Cannot run program "java" (in directory ".\Server"): CreateProcess error=267, The directory name is invalid
+[2025-03-28 18:34:59] [WARN] com.kmrug.discordbot.Bot = This command can only be used in a text channel!
+[2025-03-28 18:34:59] [ERROR] com.kmrug.discordbot.Bot = [BOT ERROR] Failed to start server: java.io.IOException: Cannot run program "java" (in directory ".\Server"): CreateProcess error=267, The directory name is invalid
+[2025-03-28 18:34:59] [WARN] com.kmrug.discordbot.Bot = This command can only be used in a text channel!
+[2025-03-28 18:34:59] [ERROR] com.kmrug.discordbot.Bot = [BOT ERROR] Failed to start server: java.io.IOException: Cannot run program "java" (in directory ".\Server"): CreateProcess error=267, The directory name is invalid
+[2025-03-28 18:34:59] [ERROR] com.kmrug.discordbot.Bot = [BOT WARNING] Server process is running, but port is closed.
+[2025-03-28 18:35:46] [INFO] com.kmrug.discordbot.Bot = Server is running and online
+[2025-03-28 18:35:46] [WARN] com.kmrug.discordbot.Bot = Minecraft server is already running!
+[2025-03-28 18:35:46] [WARN] com.kmrug.discordbot.Bot = This command can only be used in a text channel!
+[2025-03-28 18:35:46] [ERROR] com.kmrug.discordbot.Bot = [BOT ERROR] Failed to start server: java.io.IOException: Cannot run program "java" (in directory ".\Server"): CreateProcess error=267, The directory name is invalid
+[2025-03-28 18:35:46] [WARN] com.kmrug.discordbot.Bot = This command can only be used in a text channel!
+[2025-03-28 18:35:46] [ERROR] com.kmrug.discordbot.Bot = [BOT ERROR] Failed to start server: java.io.IOException: Cannot run program "java" (in directory ".\Server"): CreateProcess error=267, The directory name is invalid
+[2025-03-28 18:35:46] [WARN] com.kmrug.discordbot.Bot = This command can only be used in a text channel!
+[2025-03-28 18:35:46] [ERROR] com.kmrug.discordbot.Bot = [BOT ERROR] Failed to start server: java.io.IOException: Cannot run program "java" (in directory ".\Server"): CreateProcess error=267, The directory name is invalid
+[2025-03-28 18:35:46] [ERROR] com.kmrug.discordbot.Bot = [BOT WARNING] Server process is running, but port is closed.
+[2025-03-28 18:36:27] [INFO] com.kmrug.discordbot.Bot = Server is running and online
+[2025-03-28 18:36:27] [WARN] com.kmrug.discordbot.Bot = Minecraft server is already running!
+[2025-03-28 18:36:27] [WARN] com.kmrug.discordbot.Bot = This command can only be used in a text channel!
+[2025-03-28 18:36:27] [ERROR] com.kmrug.discordbot.Bot = [BOT ERROR] Failed to start server: java.io.IOException: Cannot run program "java" (in directory ".\Server"): CreateProcess error=267, The directory name is invalid
+[2025-03-28 18:36:27] [WARN] com.kmrug.discordbot.Bot = This command can only be used in a text channel!
+[2025-03-28 18:36:27] [ERROR] com.kmrug.discordbot.Bot = [BOT ERROR] Failed to start server: java.io.IOException: Cannot run program "java" (in directory ".\Server"): CreateProcess error=267, The directory name is invalid
+[2025-03-28 18:36:27] [WARN] com.kmrug.discordbot.Bot = This command can only be used in a text channel!
+[2025-03-28 18:36:27] [ERROR] com.kmrug.discordbot.Bot = [BOT ERROR] Failed to start server: java.io.IOException: Cannot run program "java" (in directory ".\Server"): CreateProcess error=267, The directory name is invalid
+[2025-03-28 18:36:27] [ERROR] com.kmrug.discordbot.Bot = [BOT WARNING] Server process is running, but port is closed.
+[2025-03-28 18:37:40] [INFO] com.kmrug.discordbot.Bot = Server is running and online
+[2025-03-28 18:37:40] [WARN] com.kmrug.discordbot.Bot = Minecraft server is already running!
+[2025-03-28 18:37:40] [WARN] com.kmrug.discordbot.Bot = This command can only be used in a text channel!
+[2025-03-28 18:37:40] [ERROR] com.kmrug.discordbot.Bot = [BOT ERROR] Failed to start server: java.io.IOException: Cannot run program "java" (in directory ".\Server"): CreateProcess error=267, The directory name is invalid
+[2025-03-28 18:37:40] [WARN] com.kmrug.discordbot.Bot = This command can only be used in a text channel!
+[2025-03-28 18:37:40] [ERROR] com.kmrug.discordbot.Bot = [BOT ERROR] Failed to start server: java.io.IOException: Cannot run program "java" (in directory ".\Server"): CreateProcess error=267, The directory name is invalid
+[2025-03-28 18:37:40] [WARN] com.kmrug.discordbot.Bot = This command can only be used in a text channel!
+[2025-03-28 18:37:40] [ERROR] com.kmrug.discordbot.Bot = [BOT ERROR] Failed to start server: java.io.IOException: Cannot run program "java" (in directory ".\Server"): CreateProcess error=267, The directory name is invalid
+[2025-03-28 18:37:40] [ERROR] com.kmrug.discordbot.Bot = [BOT WARNING] Server process is running, but port is closed.
