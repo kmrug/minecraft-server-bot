@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.kmrug.discordbot.CommandListenerTest" time="3.366" tests="7" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.kmrug.discordbot.CommandListenerTest" time="0.133" tests="7" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="21"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -12,12 +12,11 @@
     <property name="user.timezone" value="Asia/Riyadh"/>
     <property name="os.name" value="Windows 10"/>
     <property name="java.vm.specification.version" value="21"/>
-    <property name="user.country" value="US"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="user.country" value="US"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-21\bin"/>
-    <property name="sun.java.command" value="C:\Users\kisha\AppData\Local\Temp\surefire14801946994953161749\surefirebooter-20250325000416354_3.jar C:\Users\kisha\AppData\Local\Temp\surefire14801946994953161749 2025-03-25T00-04-16_101-jvmRun1 surefire-20250325000416354_1tmp surefire_0-20250325000416354_2tmp"/>
+    <property name="sun.java.command" value="C:\Users\kisha\AppData\Local\Temp\surefire8361052078025568958\surefirebooter-20250329011450163_3.jar C:\Users\kisha\AppData\Local\Temp\surefire8361052078025568958 2025-03-29T01-14-49_972-jvmRun1 surefire-20250329011450163_1tmp surefire_0-20250329011450163_2tmp"/>
     <property name="jdk.debug" value="release"/>
-    <property name="test" value="com.kmrug.discordbot.CommandListenerTest"/>
     <property name="surefire.test.class.path" value="C:\Users\kisha\Desktop\minecraft-discord-bot\bot\target\test-classes;C:\Users\kisha\Desktop\minecraft-discord-bot\bot\target\classes;C:\Users\kisha\.m2\repository\org\junit\jupiter\junit-jupiter\5.12.1\junit-jupiter-5.12.1.jar;C:\Users\kisha\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.12.1\junit-jupiter-api-5.12.1.jar;C:\Users\kisha\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\kisha\.m2\repository\org\junit\platform\junit-platform-commons\1.12.1\junit-platform-commons-1.12.1.jar;C:\Users\kisha\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\kisha\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.12.1\junit-jupiter-params-5.12.1.jar;C:\Users\kisha\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.12.1\junit-jupiter-engine-5.12.1.jar;C:\Users\kisha\.m2\repository\org\junit\platform\junit-platform-engine\1.12.1\junit-platform-engine-1.12.1.jar;C:\Users\kisha\.m2\repository\net\dv8tion\JDA\5.0.0-beta.3\JDA-5.0.0-beta.3.jar;C:\Users\kisha\.m2\repository\org\slf4j\slf4j-api\1.7.36\slf4j-api-1.7.36.jar;C:\Users\kisha\.m2\repository\com\neovisionaries\nv-websocket-client\2.14\nv-websocket-client-2.14.jar;C:\Users\kisha\.m2\repository\com\squareup\okhttp3\okhttp\4.10.0\okhttp-4.10.0.jar;C:\Users\kisha\.m2\repository\com\squareup\okio\okio-jvm\3.0.0\okio-jvm-3.0.0.jar;C:\Users\kisha\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib-jdk8\1.5.31\kotlin-stdlib-jdk8-1.5.31.jar;C:\Users\kisha\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib-jdk7\1.5.31\kotlin-stdlib-jdk7-1.5.31.jar;C:\Users\kisha\.m2\repository\club\minnced\opus-java\1.1.1\opus-java-1.1.1.jar;C:\Users\kisha\.m2\repository\club\minnced\opus-java-api\1.1.1\opus-java-api-1.1.1.jar;C:\Users\kisha\.m2\repository\net\java\dev\jna\jna\4.4.0\jna-4.4.0.jar;C:\Users\kisha\.m2\repository\club\minnced\opus-java-natives\1.1.1\opus-java-natives-1.1.1.jar;C:\Users\kisha\.m2\repository\org\apache\commons\commons-collections4\4.4\commons-collections4-4.4.jar;C:\Users\kisha\.m2\repository\net\sf\trove4j\trove4j\3.0.3\trove4j-3.0.3.jar;C:\Users\kisha\.m2\repository\com\fasterxml\jackson\core\jackson-core\2.14.1\jackson-core-2.14.1.jar;C:\Users\kisha\.m2\repository\com\fasterxml\jackson\core\jackson-databind\2.14.1\jackson-databind-2.14.1.jar;C:\Users\kisha\.m2\repository\com\fasterxml\jackson\core\jackson-annotations\2.14.1\jackson-annotations-2.14.1.jar;C:\Users\kisha\.m2\repository\io\github\cdimascio\java-dotenv\5.2.2\java-dotenv-5.2.2.jar;C:\Users\kisha\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib\1.4.0\kotlin-stdlib-1.4.0.jar;C:\Users\kisha\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib-common\1.4.0\kotlin-stdlib-common-1.4.0.jar;C:\Users\kisha\.m2\repository\org\jetbrains\annotations\13.0\annotations-13.0.jar;C:\Users\kisha\.m2\repository\org\apache\logging\log4j\log4j-core\2.24.3\log4j-core-2.24.3.jar;C:\Users\kisha\.m2\repository\org\apache\logging\log4j\log4j-layout-template-json\2.24.3\log4j-layout-template-json-2.24.3.jar;C:\Users\kisha\.m2\repository\org\apache\logging\log4j\log4j-api\2.24.3\log4j-api-2.24.3.jar;C:\Users\kisha\.m2\repository\org\apache\logging\log4j\log4j-slf4j-impl\2.24.3\log4j-slf4j-impl-2.24.3.jar;C:\Users\kisha\.m2\repository\org\mockito\mockito-core\5.11.0\mockito-core-5.11.0.jar;C:\Users\kisha\.m2\repository\net\bytebuddy\byte-buddy\1.14.12\byte-buddy-1.14.12.jar;C:\Users\kisha\.m2\repository\net\bytebuddy\byte-buddy-agent\1.14.12\byte-buddy-agent-1.14.12.jar;C:\Users\kisha\.m2\repository\org\objenesis\objenesis\3.3\objenesis-3.3.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
     <property name="user.home" value="C:\Users\kisha"/>
@@ -31,7 +30,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\kisha\AppData\Local\Temp\surefire14801946994953161749\surefirebooter-20250325000416354_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\kisha\AppData\Local\Temp\surefire8361052078025568958\surefirebooter-20250329011450163_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="21.0.5+9-LTS-239"/>
@@ -42,7 +41,6 @@
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="file.encoding" value="UTF-8"/>
     <property name="java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM"/>
-    <property name="maven.ext.class.path" value="C:\Users\kisha\.vscode\extensions\oracle.oracle-java-23.1.0\nbcode\java\maven-nblib\netbeans-eventspy.jar"/>
     <property name="localRepository" value="C:\Users\kisha\.m2\repository"/>
     <property name="java.vendor.url.bug" value="https://bugreport.java.com/bugreport/"/>
     <property name="java.io.tmpdir" value="C:\Users\kisha\AppData\Local\Temp\"/>
@@ -60,26 +58,14 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="65.0"/>
   </properties>
-  <testcase name="testGetPlayerCount" classname="com.kmrug.discordbot.CommandListenerTest" time="3.262">
-    <system-out><![CDATA[2025-03-24T21:04:19.166922200Z main INFO Starting configuration XmlConfiguration[location=C:\Users\kisha\Desktop\minecraft-discord-bot\bot\target\classes\log4j2.xml, lastModified=2025-03-17T15:37:00.992Z]...
-2025-03-24T21:04:19.168922400Z main INFO Start watching for changes to C:\Users\kisha\Desktop\minecraft-discord-bot\bot\target\classes\log4j2.xml every 0 seconds
-2025-03-24T21:04:19.168922400Z main INFO Configuration XmlConfiguration[location=C:\Users\kisha\Desktop\minecraft-discord-bot\bot\target\classes\log4j2.xml, lastModified=2025-03-17T15:37:00.992Z] started.
-2025-03-24T21:04:19.170920800Z main INFO Stopping configuration org.apache.logging.log4j.core.config.DefaultConfiguration@599f571f...
-2025-03-24T21:04:19.170920800Z main INFO Configuration org.apache.logging.log4j.core.config.DefaultConfiguration@599f571f stopped.
-]]></system-out>
-    <system-err><![CDATA[WARNING: A Java agent has been loaded dynamically (C:\Users\kisha\.m2\repository\net\bytebuddy\byte-buddy-agent\1.14.12\byte-buddy-agent-1.14.12.jar)
-WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
-WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
-WARNING: Dynamic loading of agents will be disallowed by default in a future release
-]]></system-err>
-  </testcase>
-  <testcase name="testStartServerCommand" classname="com.kmrug.discordbot.CommandListenerTest" time="0.005"/>
-  <testcase name="testRestartServerCommand" classname="com.kmrug.discordbot.CommandListenerTest" time="0.005"/>
+  <testcase name="testGetPlayerCount" classname="com.kmrug.discordbot.CommandListenerTest" time="0.103"/>
+  <testcase name="testStartServerCommand" classname="com.kmrug.discordbot.CommandListenerTest" time="0.004"/>
+  <testcase name="testRestartServerCommand" classname="com.kmrug.discordbot.CommandListenerTest" time="0.002"/>
   <testcase name="testStopServerCommand" classname="com.kmrug.discordbot.CommandListenerTest" time="0.005"/>
-  <testcase name="testDefaultCommand" classname="com.kmrug.discordbot.CommandListenerTest" time="0.004"/>
-  <testcase name="testServerStatusCommand" classname="com.kmrug.discordbot.CommandListenerTest" time="0.005"/>
-  <testcase name="testNullCommand" classname="com.kmrug.discordbot.CommandListenerTest" time="0.023">
-    <system-out><![CDATA[[2025-03-25 00:04:20] [WARN] com.kmrug.discordbot.Bot - Received null slash command event or null name.
+  <testcase name="testDefaultCommand" classname="com.kmrug.discordbot.CommandListenerTest" time="0.005"/>
+  <testcase name="testServerStatusCommand" classname="com.kmrug.discordbot.CommandListenerTest" time="0.004"/>
+  <testcase name="testNullCommand" classname="com.kmrug.discordbot.CommandListenerTest" time="0.004">
+    <system-out><![CDATA[[2025-03-29 01:14:58] [WARN] com.kmrug.discordbot.Bot - Received null slash command event or null name.
 ]]></system-out>
   </testcase>
 </testsuite>

@@ -1,12 +1,21 @@
 package com.kmrug.discordbot;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
@@ -74,7 +83,10 @@ public class BotTest {
     when(mockChannelUnion.asTextChannel()).thenReturn(mockTextChannel);
     when(mockTextChannel.getName()).thenReturn("test-channel");
 
-    bot.startMinecraftServer(mockEvent);
+    boolean result = bot.isValidTextChannel(mockChannelUnion);
+
+    assertTrue(result);
+    assertEquals("test-channel", bot.channelName);
   }
 
   @Test
@@ -86,23 +98,24 @@ public class BotTest {
     when(mockChannelUnion.sendMessage(anyString())).thenReturn(mockAction);
     doNothing().when(mockAction).queue();
 
-    bot.startMinecraftServer(mockEvent);
+    boolean result = bot.isValidTextChannel(mockChannelUnion);
 
+    assertFalse(result);
     verify(mockChannelUnion).sendMessage("❌ This command can only be used in a text channel!");
-    // verify(mockAction).queue();
+    verify(mockAction).queue();
   }
 
   @Test
   public void testLogFileExists() {
 
-    File mockFile = mock(File.class);
+    // File mockFile = mock(File.class);
 
-    when(mockFile.getPath()).thenReturn("./Server/logs/latest.log");
-    when(mockFile.exists()).thenReturn(true);
+    // when(mockFile.getPath()).thenReturn("./Server/logs/latest.log");
+    // when(mockFile.exists()).thenReturn(true);
 
-    // TODO: Refactor getLogFile() to allow mocking and verifying log deletion
+    // // TODO: Refactor getLogFile() to allow mocking and verifying log deletion
 
-    bot.startMinecraftServer(mockEvent);
+    // bot.startMinecraftServer(mockEvent);
   }
 
   @Test
@@ -152,7 +165,7 @@ public class BotTest {
     // verify(Bot.idleShutdownManager).resetTimer();
   }
 
-  // Note: This section tests the CheckServerStatus functino
+  // Note: This section tests the CheckServerStatus function
 
   @Test
   public void testIsProcessNotRunning() {
@@ -194,6 +207,76 @@ public class BotTest {
 
     verify(mockChannelUnion).sendMessageEmbeds(any(MessageEmbed.class));
     verify(mockAction).queue();
+  }
+
+  // Note: This section tests the GetPlayerCount function
+
+  @Test
+  public void testIsProcessAlive() {
+
+    when(mockProcess.isAlive()).thenReturn(false);
+
+    when(mockEvent.getChannel()).thenReturn(mockChannelUnion);
+    when(mockChannelUnion.sendMessage("❌ No Minecraft server is currently running!")).thenReturn(mockAction);
+    doNothing().when(mockAction).queue();
+
+    int result = bot.getPlayerCount(mockEvent, true); // MIGHT HAVE TO CHANGE TRUE TO FALSE LATER
+    assertEquals(-1, result);
+
+    verify(mockChannelUnion).sendMessage("❌ No Minecraft server is currently running!");
+    verify(mockAction).queue();
+
+  }
+
+  @Test
+  public void testLogFileExistsInPlayerCount() {
+
+    File mockFile = mock(File.class);
+
+    when(mockFile.getPath()).thenReturn("./Server/logs/latest.log");
+    when(mockFile.exists()).thenReturn(true);
+
+    // TODO: Refactor getLogFile() to allow mocking and verifying log deletion
+
+    int result = bot.getPlayerCount(mockEvent, true);
+    assertEquals(-1, result);
+  }
+
+  @TempDir
+  File tempDir;
+
+  @Test
+  public void testCorrectPlayerCount() {
+
+    Bot spyBot = spy(new Bot(null));
+    OutputStream mockStream = mock(OutputStream.class);
+    doReturn(true).when(spyBot).isPortOpen("localhost", 25565);
+
+    try {
+      Path testLogPath;
+        testLogPath = tempDir.toPath().resolve("logs/latest.log");
+      Files.createDirectories(testLogPath.getParent());
+      Files.write(testLogPath, List.of("There are 5 of a max of 10 players online"), StandardCharsets.UTF_8);
+      spyBot.setLogFilePath(testLogPath);
+    } catch (IOException e) {
+
+    }
+
+    spyBot.serverProcess = mockProcess;
+
+    when(mockProcess.isAlive()).thenReturn(true);
+    when(mockProcess.getOutputStream()).thenReturn(mockStream);
+    when(mockEvent.getChannel()).thenReturn(mockChannelUnion);
+    when(mockChannelUnion.sendMessage("📊 Players Online: 5/10")).thenReturn(mockAction);
+    doNothing().when(mockAction).queue();
+
+    int result = spyBot.getPlayerCount(mockEvent, false);
+
+    assertEquals(5, result);
+
+    verify(mockChannelUnion).sendMessage("📊 Players Online: 5/10");
+    verify(mockAction).queue();
+
   }
 
 }

@@ -14,6 +14,11 @@ public class CommandListener extends ListenerAdapter {
   @Override
   public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
 
+    if (event == null || event.getName() == null) {
+      Bot.logger.warn("Received null slash command event or null name.");
+      return;
+    }
+
     switch (event.getName()) {
       case "startserver":
         event.reply("⏳ Waiting for Minecraft server to start...").queue();

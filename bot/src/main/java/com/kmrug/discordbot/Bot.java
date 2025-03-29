@@ -10,6 +10,7 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
 import java.net.Socket;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
@@ -30,8 +31,10 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
+import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
@@ -41,7 +44,7 @@ public class Bot extends ListenerAdapter {
   private JDA jda;
   protected Process serverProcess = null; // Store Minecraft server status
   public static IdleShutdownManager idleShutdownManager;
-  private String channelName;
+  protected String channelName;
   String logFileName;
 
   // Map to store channels by server id (or another identifier)
@@ -53,12 +56,18 @@ public class Bot extends ListenerAdapter {
     this.jda = jda;
   }
 
+  private File logFilePath = null; // null = use default
+
+  public void setLogFilePath(Path testPath) {
+    this.logFilePath = testPath.toFile();
+  }
+
   public static void main(String[] args) throws Exception {
 
     String token = System.getenv("DISCORD_TOKEN"); // For Docker
 
     if (token == null || token.isEmpty()) {
-      Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load(); // Loads from .env file (only for local use)
+      Dotenv dotenv = Dotenv.configure().directory("../").ignoreIfMissing().load(); // Loads from .env file (only for local use)
       token = dotenv.get("DISCORD_TOKEN"); // Fallback to local .env file
     }
 
@@ -100,6 +109,29 @@ public class Bot extends ListenerAdapter {
     return fileName;
   }
 
+  protected boolean isValidTextChannel(MessageChannel channel) {
+
+    if (channel.getType() == ChannelType.TEXT) {
+      TextChannel textChannel = ((MessageChannelUnion) channel).asTextChannel();
+      channelName = textChannel.getName();
+      return true;
+    } else {
+      logger.warn("This command can only be used in a text channel!");
+      channel.sendMessage("❌ This command can only be used in a text channel!").queue();
+      return false;
+    }
+  }
+
+  private File resolvePathWithFallback(String... candidates) {
+    for (String path : candidates) {
+      File file = new File(path);
+      if (file.exists()) {
+        return file;
+      }
+    }
+    return new File(candidates[0]); // Default to first even if it doesn't exist
+  }
+
   public void startMinecraftServer(SlashCommandInteractionEvent event) {
 
     long startTime = System.currentTimeMillis(); // Start time
@@ -114,18 +146,14 @@ public class Bot extends ListenerAdapter {
     MessageChannel channel = event.getChannel();
 
     // Ensure the channel is a TextChannel
-    if (channel instanceof TextChannel textChannel) {
-      channelName = textChannel.getName();
-    } else {
-      logger.warn("This command can only be used in a text channel!");
-      event.getChannel().sendMessage("❌ This command can only be used in a text channel!").queue();
-    }
+    if (!isValidTextChannel(channel))
+      return;
 
     try {
 
       // Define server file location
-      File serverJar = new File("./Server/server.jar");
-      File logFile = new File("./Server/logs/latest.log");
+      File serverJar = resolvePathWithFallback("./Server/server.jar", "../Server/server.jar");
+      File logFile = resolvePathWithFallback("./Server/logs/latest.log", "../Server/logs/latest.log");
 
       if (logFile.exists()) {
         logFile.delete();
@@ -136,7 +164,7 @@ public class Bot extends ListenerAdapter {
 
       // Start the server process
       ProcessBuilder processBuilder = new ProcessBuilder(
-          "java", "-Xmx512M", "-Xms256M", "-jar", serverJar.getAbsolutePath(),
+          "java", "-Xmx1024M", "-Xms1024M", "-jar", serverJar.getAbsolutePath(),
           "nogui");
 
       processBuilder.directory(serverJar.getParentFile()); // set working dir
@@ -203,7 +231,7 @@ public class Bot extends ListenerAdapter {
     }
 
     // Path of the latest.log file
-    File latestLog = new File("./Server/logs/latest.log");
+    File latestLog = resolvePathWithFallback("./Server/logs/latest.log", "../Server/logs/latest.log");
 
     try {
       // Send "stop" command to the minecraft server
@@ -218,7 +246,8 @@ public class Bot extends ListenerAdapter {
       logger.info("Minecraft server stopped with exit code: " + exitCode);
 
       if (latestLog.exists()) {
-        File renamedLog = new File("./Server/logs/" + logFileName);
+        File renamedLog = new File(latestLog.getParent(), logFileName);
+        // File renamedLog = resolvePathWithFallback("./Server/logs/" + logFileName, "../Server/logs/" + logFileName);
         Files.move(latestLog.toPath(), renamedLog.toPath(), StandardCopyOption.REPLACE_EXISTING);
         logger.info("Log file renamed to: " + renamedLog.getName());
       }
@@ -297,8 +326,8 @@ public class Bot extends ListenerAdapter {
 
       // Create Embed
       EmbedBuilder embedBuilder = new EmbedBuilder();
-      embedBuilder.setTitle("Minecraft Server Status")
-          .setDescription("✅ Minecraft server is currently running and accepting connections!")
+      embedBuilder.setTitle("Server Status")
+          .setDescription("✅ Server is currently up and running!")
           .setColor(Color.GREEN)
           .addField("Uptime", uptime, false)
           .addField("Arch Name", archName, false)
@@ -334,13 +363,13 @@ public class Bot extends ListenerAdapter {
       return -1;
     }
 
-    File logFile = new File("./Server/logs/latest.log");
-
-    if (!logFile.exists()) {
-      event.getChannel().sendMessage("⚠️ Could not find the server log file.").queue();
-      logger.error("[BOT ERROR] latest.log not found.");
-      return -1;
+    File logFile;
+    if (logFilePath != null) {
+      logFile = logFilePath;
+    } else {
+      logFile = resolvePathWithFallback("./Server/logs/latest.log", "../Server/logs/latest.log");
     }
+
     int playersOnline = 0;
     try {
 
@@ -376,7 +405,7 @@ public class Bot extends ListenerAdapter {
 
     } catch (IOException | InterruptedException | NumberFormatException e) {
       event.getChannel().sendMessage("❌ Failed to read server logs.").queue();
-      logger.error("[BOT ERROR] Failed to read latest.log: " + e);
+      logger.error("[BOT ERROR] Failed to read latest.log (getPlayerCount): " + e);
     }
     return playersOnline;
   }
