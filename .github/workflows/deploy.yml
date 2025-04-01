@@ -53,7 +53,7 @@ jobs:
           --instance-ids "i-0e511fb564217e109" \
           --comment "Deploying Minecraft Discord bot" \
           --parameters "{\"commands\": $COMMANDS}" \
-          --region eu-west-3 \
+          --region me-central-1 \
           --cloud-watch-output-config CloudWatchLogGroupName="SSMCommandLogs",CloudWatchOutputEnabled=true
 
       - name: Notify deployment success
