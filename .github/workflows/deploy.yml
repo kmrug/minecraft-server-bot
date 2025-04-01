@@ -2,14 +2,14 @@ name: Deploy to AWS EC2
 
 on:
   push:
-    branches:
-      - dev
+    branches: [main, dev]
     paths:
       - 'bot/src/**'
       - 'bot/target/**'
       - 'bot/pom.xml'
       - 'Dockerfile'
       - 'docker-compose.yml'      
+      - 'ci.yml'
       - '.github/workflows/deploy.yml'
       - '.github/workflows/ssm-commands.json'
 
@@ -36,7 +36,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
-          aws-region: eu-west-3
+          aws-region: me-central-1
 
       - name: Notify deployment in progress
         run: |
@@ -50,10 +50,10 @@ jobs:
           COMMANDS=$(jq -c .commands .github/scripts/ssm-commands.json)
           aws ssm send-command \
           --document-name "AWS-RunShellScript" \
-          --instance-ids "i-0711990baeff85669" \
+          --instance-ids "i-0e511fb564217e109" \
           --comment "Deploying Minecraft Discord bot" \
           --parameters "{\"commands\": $COMMANDS}" \
-          --region eu-west-3 \
+          --region me-central-1 \
           --cloud-watch-output-config CloudWatchLogGroupName="SSMCommandLogs",CloudWatchOutputEnabled=true
 
       - name: Notify deployment success
