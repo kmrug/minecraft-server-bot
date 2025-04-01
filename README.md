@@ -1,5 +1,8 @@
 # Minecraft Discord Bot
 
+[![Build Status](https://github.com/kmrug/minecraft-server-bot/actions/workflows/deploy.yml/badge.svg)](https://github.com/kmrug/minecraft-server-bot/actions/workflows/deploy.yml)
+![Java CI](https://github.com/kmrug/minecraft-server-bot/actions/workflows/ci.yml/badge.svg)
+
 A Discord bot that integrates with a Minecraft server to provide management commands like starting, stopping, restarting the server, fetching player count, and displaying server status.
 
 ## Features
@@ -9,12 +12,12 @@ A Discord bot that integrates with a Minecraft server to provide management comm
 - ✅ Idle Shutdown (Automatic server shutdown if no players are online for a set time)
 - ✅ Server Restart Command
 - ✅ Resource Monitoring (CPU, Memory usage)
-- 🔄 Dockerization (In Progress)
-- 🔄 Log4j Integration for logging (Planned)
-- 🔄 Port Forwarding for Public Access (Deferred)
-- 🔄 Testing with JUnit (Planned)
+- ✅ Dockerization
+- ✅ Log4j Integration for logging
+- ✅ Port Forwarding for Public Access
+- ✅ Deployment on AWS EC2
+- 🔄 Testing with JUnit and Mockito (In Progress)
 - 🔄 Spring Boot Integration (Planned)
-- 🔄 Deployment on AWS or other Cloud Platforms (Planned)
 
 ## Tech Stack
 
@@ -22,16 +25,17 @@ A Discord bot that integrates with a Minecraft server to provide management comm
 - Discord API
 - ProcessBuilder for server management
 - Docker
-- Log4j (Upcoming)
+- Log4j
+- AWS
+- JUnit (Mockito) (In Progress)
 - Spring Boot (Upcoming)
-- AWS (Upcoming)
 
 ## Getting Started
 
 ### Prerequisites
 - Java 17
 - Maven
-- Docker (Optional)
+- Docker
 - Discord Bot Token
 
 ### Setup Instructions

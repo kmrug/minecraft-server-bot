@@ -1,0 +1,73 @@
+name: Deploy to AWS EC2
+
+on:
+  push:
+    branches: [main, dev]
+    paths:
+      - 'bot/src/**'
+      - 'bot/target/**'
+      - 'bot/pom.xml'
+      - 'Dockerfile'
+      - 'docker-compose.yml'      
+      - 'ci.yml'
+      - '.github/workflows/deploy.yml'
+      - '.github/workflows/ssm-commands.json'
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Notify start of deployment
+        run: |
+          curl -H "Content-Type: application/json" \
+          -X POST \
+          -d '{"content":"🚀 Deployment started for Minecraft Discord bot!"}' \
+          ${{ secrets.DISCORD_WEBHOOK_URL }}      
+
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: me-central-1
+
+      - name: Notify deployment in progress
+        run: |
+          curl -H "Content-Type: application/json" \
+          -X POST \
+          -d '{"content":"📦 Running deployment steps on EC2 via AWS SSM..."}' \
+          ${{ secrets.DISCORD_WEBHOOK_URL }}  
+
+      - name: Run remote command via SSM
+        run: |
+          COMMANDS=$(jq -c .commands .github/scripts/ssm-commands.json)
+          aws ssm send-command \
+          --document-name "AWS-RunShellScript" \
+          --instance-ids "i-0e511fb564217e109" \
+          --comment "Deploying Minecraft Discord bot" \
+          --parameters "{\"commands\": $COMMANDS}" \
+          --region me-central-1 \
+          --cloud-watch-output-config CloudWatchLogGroupName="SSMCommandLogs",CloudWatchOutputEnabled=true
+
+      - name: Notify deployment success
+        if: success()
+        run: |
+          curl -H "Content-Type: application/json" \
+               -X POST \
+               -d '{"content":"✅ Deployment completed successfully!"}' \
+               ${{ secrets.DISCORD_WEBHOOK_URL }}
+
+      - name: Notify deployment failure
+        if: failure()
+        run: |
+          curl -H "Content-Type: application/json" \
+               -X POST \
+               -d '{"content":"🚨 Deployment failed! Check your logs."}' \
+               ${{ secrets.DISCORD_WEBHOOK_URL }}

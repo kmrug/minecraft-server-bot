@@ -17,20 +17,20 @@ public class IdleShutdownManager {
   }
 
   public void startTimer() {
-    System.out.println("[BOT] Idle timer started...");
+    Bot.logger.info("Idle timer started...");    
     timer.cancel();
     timer = new Timer(true);
     timer.schedule(new TimerTask() {
       @Override
       public void run() {
-        System.out.println("[BOT] No players detected for " + timeoutMinutes + " minute(s). Stopping server...");
+        Bot.logger.warn("No players detected for " + timeoutMinutes + " minute(s). Stopping server...");        
         botInstance.stopMinecraftServer("IdleStop");
       }
     }, timeoutMinutes * 60 * 1000);
   }
 
   public void resetTimer() {
-    System.out.println("[BOT] Player activity detected! Resetting idle timer...");
+    Bot.logger.info("Player activity detected! Resetting idle timer...");    
     startTimer();
   }
 
