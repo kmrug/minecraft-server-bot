@@ -12,7 +12,9 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -21,6 +23,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -64,6 +67,8 @@ public class BotTest {
     processField.set(bot, mockProcess);
   }
 
+  // Note: This section tests the StartMinecraftServer function
+
   @Test
   public void testServerProcess() {
 
@@ -103,6 +108,55 @@ public class BotTest {
     assertFalse(result);
     verify(mockChannelUnion).sendMessage("❌ This command can only be used in a text channel!");
     verify(mockAction).queue();
+  }
+
+  @Test
+  public void getCorrectDirectory_whenFilesExist_shouldReturnCorrectPaths() {
+    File testBaseDir = tempDir.toPath().resolve("Server").toFile();
+    File logsDir = new File(testBaseDir, "logs");
+    logsDir.mkdirs();
+
+    File fakeJar = new File(testBaseDir, "server.jar");
+    File fakeLog = new File(logsDir, "latest.log");
+
+    try {
+      fakeJar.createNewFile();
+      fakeLog.createNewFile();
+    } catch (IOException e) {
+      fail("Test setup failed");
+    }
+
+    // SSpy and override base path
+    Bot spyBot = spy(new Bot(null));
+    doReturn(testBaseDir.getAbsolutePath()).when(spyBot).getServerBasePath();
+
+    File[] files = spyBot.getCorrectDirectory();
+    File logFile = files[0];
+    File serverJar = files[1];
+
+    assertTrue(logFile.exists(), "Expected mock latest.log to exist");
+    assertTrue(serverJar.exists(), "Expected mock server.jar to exist");
+  }
+
+  @Test
+  public void getCorrectDirectory_whenFilesMissing_shouldLogAndStillReturn() {
+    File testBaseDir = new File(tempDir, "MissingServer");
+    File logsDir = new File(testBaseDir, "logs");
+    logsDir.mkdirs();
+
+    File logFile = new File(logsDir, "latest.log");
+    File serverJar = new File(testBaseDir, "server.jar");
+
+    assertFalse(logFile.exists(), "Expected latest.log to not exist");
+    assertFalse(serverJar.exists(), "Expected server.jar to not exist");
+
+    String basePath = testBaseDir.getAbsolutePath();
+
+    File expectedLogFile = new File(basePath + "/logs/latest.log");
+    File expectedServerJar = new File(basePath + "/server.jar");
+
+    assertEquals(expectedLogFile.getAbsolutePath(), logFile.getAbsolutePath());
+    assertEquals(expectedServerJar.getAbsolutePath(), serverJar.getAbsolutePath());
   }
 
   @Test
@@ -247,20 +301,32 @@ public class BotTest {
 
   @Test
   public void testCorrectPlayerCount() {
-
     Bot spyBot = spy(new Bot(null));
     OutputStream mockStream = mock(OutputStream.class);
     doReturn(true).when(spyBot).isPortOpen("localhost", 25565);
 
+    // Create a mock latest.log file in temp dir
+    Path testLogPath = tempDir.toPath().resolve("logs/latest.log");
     try {
-      Path testLogPath;
-        testLogPath = tempDir.toPath().resolve("logs/latest.log");
       Files.createDirectories(testLogPath.getParent());
       Files.write(testLogPath, List.of("There are 5 of a max of 10 players online"), StandardCharsets.UTF_8);
-      spyBot.setLogFilePath(testLogPath);
     } catch (IOException e) {
-
+      fail("Test setup failed to write mock log file");
     }
+
+    // Create a dummy server.jar to complete getCorrectDirectory()
+    File dummyServerJar = tempDir.toPath().resolve("server.jar").toFile();
+    try {
+      dummyServerJar.createNewFile();
+    } catch (IOException e) {
+      fail("Test setup failed to create dummy server.jar");
+    }
+
+    // Override getCorrectDirectory to return our temp paths
+    doReturn(new File[] {
+        testLogPath.toFile(),
+        dummyServerJar
+    }).when(spyBot).getCorrectDirectory();
 
     spyBot.serverProcess = mockProcess;
 
@@ -273,10 +339,170 @@ public class BotTest {
     int result = spyBot.getPlayerCount(mockEvent, false);
 
     assertEquals(5, result);
-
     verify(mockChannelUnion).sendMessage("📊 Players Online: 5/10");
     verify(mockAction).queue();
+  }
+
+  // Note: This section tests the RestartMinecraftServer function
+
+  @Test
+  public void testIsProcessAliveInRestart() {
+
+    Bot spyBot = spy(new Bot(null));
+
+    when(mockProcess.isAlive()).thenReturn(false);
+    when(mockChannelUnion.sendMessage("❌ Minecraft server is offline")).thenReturn(mockAction);
+    doNothing().when(mockAction).queue();
+
+    spyBot.restartMinecraftServer(mockEvent);
+
+    verify(spyBot, never()).stopMinecraftServer("ManualStop");
+    verify(spyBot, never()).startMinecraftServer(mockEvent);
+    verify(mockChannelUnion).sendMessage("❌ Minecraft server is offline");
+    verify(mockAction).queue();
+  }
+
+  @Test
+  public void testCallToRestartServer() {
+
+    Bot spyBot = spy(new Bot(null));
+
+    spyBot.serverProcess = mockProcess;
+
+    when(mockProcess.isAlive()).thenReturn(true);
+    doReturn(true).when(spyBot).isPortOpen("localhost", 25565);
+    when(mockChannelUnion.sendMessage("🛠️ Restarting Minecraft server")).thenReturn(mockAction);
+    doNothing().when(mockAction).queue();
+    doNothing().when(spyBot).stopMinecraftServer("ManualStop");
+    doNothing().when(spyBot).startMinecraftServer(mockEvent);
+
+    spyBot.restartMinecraftServer(mockEvent);
+
+    verify(mockChannelUnion).sendMessage("🛠️ Restarting Minecraft server");
+    verify(mockAction).queue();
+
+    verify(spyBot).stopMinecraftServer("ManualStop");
+    verify(spyBot).startMinecraftServer(mockEvent);
+  }
+
+  // Note: This section tests the StopMinecraftServer function
+
+  @Test
+  public void testIsProcessAliveInStop() {
+
+    JDA mockJDA = mock(JDA.class);
+    Bot spyBot = spy(new Bot(mockJDA));
+    spyBot.serverProcess = mockProcess;
+    spyBot.channelName = "test-channel";
+    TextChannel mockChannel = mock(TextChannel.class);
+
+    when(mockJDA.getTextChannelsByName("test-channel", true)).thenReturn(List.of(mockChannel));
+    when(mockProcess.isAlive()).thenReturn(false);
+    when(mockChannel.sendMessage("⚠️ No Minecraft server is currently running!")).thenReturn(mockAction);
+    doNothing().when(mockAction).queue();
+
+    spyBot.stopMinecraftServer("ManualStop");
+
+    verify(mockChannel).sendMessage("⚠️ No Minecraft server is currently running!");
+    verify(mockAction).queue();
+  }
+
+  @Test
+  public void testLatestLogExists() {
+
+    JDA mockJDA = mock(JDA.class);
+    Bot spyBot = spy(new Bot(mockJDA));
+    OutputStream mockStream = mock(OutputStream.class);
+    spyBot.serverProcess = mockProcess;
+    spyBot.channelName = "test-channel";
+    TextChannel mockChannel = mock(TextChannel.class);
+
+    try {
+      when(mockProcess.isAlive()).thenReturn(true);
+      when(mockJDA.getTextChannelsByName("test-channel", true)).thenReturn(List.of(mockChannel));
+      File mockLogFile = mock(File.class);
+      // when(spyBot.resolvePathWithFallback(anyString(),
+      // anyString())).thenReturn(mockLogFile);
+      when(mockLogFile.exists()).thenReturn(false);
+      when(mockProcess.getOutputStream()).thenReturn(mockStream);
+      when(mockProcess.waitFor()).thenReturn(0);
+      when(mockChannel.sendMessage("Invalid stop message was sent")).thenReturn(mockAction);
+      doNothing().when(mockAction).queue();
+    } catch (InterruptedException e) {
+      System.err.println("InterruptedException has occured when trying to TestLatestLogExists()");
+    }
+
+    spyBot.stopMinecraftServer("TestSafeShutdownServer");
+
+    assertNull(spyBot.serverProcess);
+    verify(mockChannel).sendMessage("Invalid stop message was sent");
+    verify(mockAction).queue();
+  }
+
+  @Test
+  public void testManualStopServer() {
+
+    JDA mockJDA = mock(JDA.class);
+    Bot spyBot = spy(new Bot(mockJDA));
+    IdleShutdownManager mockIdle = mock(IdleShutdownManager.class);
+    OutputStream mockStream = mock(OutputStream.class);
+    spyBot.serverProcess = mockProcess;
+    spyBot.channelName = "test-channel";
+    Bot.idleShutdownManager = mockIdle;
+    TextChannel mockChannel = mock(TextChannel.class);
+
+    try {
+      when(mockProcess.isAlive()).thenReturn(true);
+      when(mockJDA.getTextChannelsByName("test-channel", true)).thenReturn(List.of(mockChannel));
+      File mockLogFile = mock(File.class);
+      // when(spyBot.resolvePathWithFallback(anyString(),
+      // anyString())).thenReturn(mockLogFile);
+      when(mockLogFile.exists()).thenReturn(false);
+      when(mockProcess.getOutputStream()).thenReturn(mockStream);
+      when(mockProcess.waitFor()).thenReturn(0);
+      when(mockChannel.sendMessage("✅ Minecraft server has safely shut down.")).thenReturn(mockAction);
+      doNothing().when(mockAction).queue();
+    } catch (InterruptedException e) {
+      System.err.println("InterruptedException has occured when trying to TestLatestLogExists()");
+    }
+    spyBot.stopMinecraftServer("ManualStop");
+
+    verify(mockChannel).sendMessage("✅ Minecraft server has safely shut down.");
+    verify(mockAction).queue();
+    verify(mockIdle).stopTimer();
+    assertNull(spyBot.serverProcess);
 
   }
 
+  @Test
+  public void testIdleStopServer() {
+
+    JDA mockJDA = mock(JDA.class);
+    Bot spyBot = spy(new Bot(mockJDA));
+    OutputStream mockStream = mock(OutputStream.class);
+    spyBot.serverProcess = mockProcess;
+    spyBot.channelName = "test-channel";
+    TextChannel mockChannel = mock(TextChannel.class);
+
+    try {
+      when(mockProcess.isAlive()).thenReturn(true);
+      when(mockJDA.getTextChannelsByName("test-channel", true)).thenReturn(List.of(mockChannel));
+      File mockLogFile = mock(File.class);
+      // when(spyBot.resolvePathWithFallback(anyString(),
+      // anyString())).thenReturn(mockLogFile);
+      when(mockLogFile.exists()).thenReturn(false);
+      when(mockProcess.getOutputStream()).thenReturn(mockStream);
+      when(mockProcess.waitFor()).thenReturn(0);
+      when(mockChannel.sendMessage("❌ Minecraft server was stopped due to inactivity.")).thenReturn(mockAction);
+      doNothing().when(mockAction).queue();
+    } catch (InterruptedException e) {
+      System.err.println("InterruptedException has occured when trying to TestLatestLogExists()");
+
+      spyBot.stopMinecraftServer("IdleStop");
+
+      assertNull(spyBot.serverProcess);
+      verify(mockChannel).sendMessage("❌ Minecraft server was stopped due to inactivity.");
+      verify(mockAction).queue();
+    }
+  }
 }

@@ -67,7 +67,8 @@ public class Bot extends ListenerAdapter {
     String token = System.getenv("DISCORD_TOKEN"); // For Docker
 
     if (token == null || token.isEmpty()) {
-      Dotenv dotenv = Dotenv.configure().directory("../").ignoreIfMissing().load(); // Loads from .env file (only for local use)
+      Dotenv dotenv = Dotenv.configure().directory("../").ignoreIfMissing().load(); // Loads from .env file (only for
+                                                                                    // local use)
       token = dotenv.get("DISCORD_TOKEN"); // Fallback to local .env file
     }
 
@@ -122,14 +123,22 @@ public class Bot extends ListenerAdapter {
     }
   }
 
-  private File resolvePathWithFallback(String... candidates) {
-    for (String path : candidates) {
-      File file = new File(path);
-      if (file.exists()) {
-        return file;
-      }
+  // This method returns the log path for either Docker or Maven (Local)
+  // accordingly
+  protected String getServerBasePath() {
+    return new File("/app").exists() ? "/app/Server" : "../Server";
+  }
+
+  protected File[] getCorrectDirectory() {
+    String basePath = getServerBasePath();
+    File logFile = new File(basePath + "/logs/latest.log");
+    File serverJar = new File(basePath + "/server.jar");
+
+    if (!serverJar.exists()) {
+      logger.error("❌ server.jar not found at: " + serverJar.getAbsolutePath());
     }
-    return new File(candidates[0]); // Default to first even if it doesn't exist
+
+    return new File[] { logFile, serverJar };
   }
 
   public void startMinecraftServer(SlashCommandInteractionEvent event) {
@@ -152,8 +161,9 @@ public class Bot extends ListenerAdapter {
     try {
 
       // Define server file location
-      File serverJar = resolvePathWithFallback("./Server/server.jar", "../Server/server.jar");
-      File logFile = resolvePathWithFallback("./Server/logs/latest.log", "../Server/logs/latest.log");
+      File[] paths = getCorrectDirectory();
+      File serverJar = paths[1];
+      File logFile = paths[0];
 
       if (logFile.exists()) {
         logFile.delete();
@@ -164,7 +174,7 @@ public class Bot extends ListenerAdapter {
 
       // Start the server process
       ProcessBuilder processBuilder = new ProcessBuilder(
-          "java", "-Xmx1024M", "-Xms1024M", "-jar", serverJar.getAbsolutePath(),
+          "java", "-Xmx512M", "-Xms256M", "-jar", serverJar.getCanonicalPath(),
           "nogui");
 
       processBuilder.directory(serverJar.getParentFile()); // set working dir
@@ -231,7 +241,7 @@ public class Bot extends ListenerAdapter {
     }
 
     // Path of the latest.log file
-    File latestLog = resolvePathWithFallback("./Server/logs/latest.log", "../Server/logs/latest.log");
+    File latestLog = getCorrectDirectory()[0];
 
     try {
       // Send "stop" command to the minecraft server
@@ -247,7 +257,6 @@ public class Bot extends ListenerAdapter {
 
       if (latestLog.exists()) {
         File renamedLog = new File(latestLog.getParent(), logFileName);
-        // File renamedLog = resolvePathWithFallback("./Server/logs/" + logFileName, "../Server/logs/" + logFileName);
         Files.move(latestLog.toPath(), renamedLog.toPath(), StandardCopyOption.REPLACE_EXISTING);
         logger.info("Log file renamed to: " + renamedLog.getName());
       }
@@ -264,6 +273,10 @@ public class Bot extends ListenerAdapter {
         String idle = "❌ Minecraft server was stopped due to inactivity.";
         channel.sendMessage(idle).queue();
         logger.info("Minecraft server was stopped due to inactivity.");
+      } else {
+        String testStop = "Invalid stop message was sent";
+        channel.sendMessage(testStop).queue();
+        logger.error("Server received an invalid Stop message");
       }
 
     } catch (IOException e) {
@@ -363,12 +376,15 @@ public class Bot extends ListenerAdapter {
       return -1;
     }
 
-    File logFile;
-    if (logFilePath != null) {
-      logFile = logFilePath;
-    } else {
-      logFile = resolvePathWithFallback("./Server/logs/latest.log", "../Server/logs/latest.log");
-    }
+    File logFile = getCorrectDirectory()[0];
+    // if (logFilePath != null) {
+    // logFile = logFilePath;
+    // } else {
+    // logFile = new File("../Server/logs/latest.log");
+
+    // logFile = resolvePathWithFallback("./Server/logs/latest.log",
+    // "../Server/logs/latest.log");
+    // }
 
     int playersOnline = 0;
     try {
