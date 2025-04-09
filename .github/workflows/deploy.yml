@@ -48,13 +48,39 @@ jobs:
       - name: Run remote command via SSM
         run: |
           COMMANDS=$(jq -c .commands .github/scripts/ssm-commands.json)
-          aws ssm send-command \
-          --document-name "AWS-RunShellScript" \
-          --instance-ids "i-0e511fb564217e109" \
-          --comment "Deploying Minecraft Discord bot" \
-          --parameters "{\"commands\": $COMMANDS}" \
-          --region me-central-1 \
-          --cloud-watch-output-config CloudWatchLogGroupName="SSMCommandLogs",CloudWatchOutputEnabled=true
+          
+          COMMAND_ID=$(aws ssm send-command \
+            --document-name "AWS-RunShellScript" \
+            --instance-ids "i-0e511fb564217e109" \
+            --comment "Deploying Minecraft Discord bot" \
+            --parameters "{\"commands\": $COMMANDS}" \
+            --region me-central-1 \
+            --cloud-watch-output-config CloudWatchLogGroupName="SSMCommandLogs",CloudWatchOutputEnabled=true \
+            --query "Command.CommandId" \
+            --output text)
+        
+          echo "Waiting for command ID: $COMMAND_ID"
+
+          # Wait for the command to finish
+          for i in {1..30}; do
+            STATUS=$(aws ssm list-command-invocations \
+            --command-id "$COMMAND_ID" \
+            --details \
+            --region me-central-1 \
+            --query "CommandInvocations[0].Status" \
+            --output text)
+
+          echo "Status: $STATUS"
+            if [[ "$STATUS" == "Success" ]]; then
+              echo "✅ SSM command succeeded."
+              break
+            elif [[ "$STATUS" == "Failed" || "$STATUS" == "Cancelled" || "$STATUS" == "TimedOut" ]]; then
+              echo "❌ SSM command failed with status: $STATUS"
+              exit 1
+            fi
+
+            sleep 5
+          done
 
       - name: Notify deployment success
         if: success()
