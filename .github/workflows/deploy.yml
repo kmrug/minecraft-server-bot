@@ -55,7 +55,7 @@ jobs:
             --comment "Deploying Minecraft Discord bot" \
             --parameters "{\"commands\": $COMMANDS}" \
             --region me-central-1 \
-            --cloud-watch-output-config CloudWatchLogGroupName="SSMCommandLogs",CloudWatchOutputEnabled=true
+            --cloud-watch-output-config CloudWatchLogGroupName="SSMCommandLogs",CloudWatchOutputEnabled=true \
             --query "Command.CommandId" \
             --output text)
         
