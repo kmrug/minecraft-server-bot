@@ -16,7 +16,7 @@ A Discord bot that integrates with a Minecraft server to provide management comm
 - ✅ Log4j Integration for logging
 - ✅ Port Forwarding for Public Access
 - ✅ Deployment on AWS EC2
-- 🔄 Testing with JUnit (Planned)
+- 🔄 Testing with JUnit and Mockito (In Progress)
 - 🔄 Spring Boot Integration (Planned)
 
 ## Tech Stack
@@ -27,8 +27,8 @@ A Discord bot that integrates with a Minecraft server to provide management comm
 - Docker
 - Log4j
 - AWS
+- JUnit (Mockito) (In Progress)
 - Spring Boot (Upcoming)
-- JUnit (Upcoming)
 
 ## Getting Started
 

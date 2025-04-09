@@ -1,1 +1,3 @@
+com\kmrug\discordbot\BotTest.class
 com\kmrug\discordbot\IdleShutdownManagerTest.class
+com\kmrug\discordbot\CommandListenerTest.class

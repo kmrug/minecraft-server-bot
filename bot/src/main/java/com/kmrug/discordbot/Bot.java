@@ -10,6 +10,7 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
 import java.net.Socket;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
@@ -30,8 +31,10 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
+import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
@@ -39,9 +42,9 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 public class Bot extends ListenerAdapter {
 
   private JDA jda;
-  private Process serverProcess = null; // Store Minecraft server status
+  protected Process serverProcess = null; // Store Minecraft server status
   public static IdleShutdownManager idleShutdownManager;
-  private String channelName;
+  protected String channelName;
   String logFileName;
 
   // Map to store channels by server id (or another identifier)
@@ -53,12 +56,19 @@ public class Bot extends ListenerAdapter {
     this.jda = jda;
   }
 
+  private File logFilePath = null; // null = use default
+
+  public void setLogFilePath(Path testPath) {
+    this.logFilePath = testPath.toFile();
+  }
+
   public static void main(String[] args) throws Exception {
 
     String token = System.getenv("DISCORD_TOKEN"); // For Docker
 
     if (token == null || token.isEmpty()) {
-      Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load(); // Loads from .env file (only for local use)
+      Dotenv dotenv = Dotenv.configure().directory("../").ignoreIfMissing().load(); // Loads from .env file (only for
+                                                                                    // local use)
       token = dotenv.get("DISCORD_TOKEN"); // Fallback to local .env file
     }
 
@@ -100,6 +110,37 @@ public class Bot extends ListenerAdapter {
     return fileName;
   }
 
+  protected boolean isValidTextChannel(MessageChannel channel) {
+
+    if (channel.getType() == ChannelType.TEXT) {
+      TextChannel textChannel = ((MessageChannelUnion) channel).asTextChannel();
+      channelName = textChannel.getName();
+      return true;
+    } else {
+      logger.warn("This command can only be used in a text channel!");
+      channel.sendMessage("❌ This command can only be used in a text channel!").queue();
+      return false;
+    }
+  }
+
+  // This method returns the log path for either Docker or Maven (Local)
+  // accordingly
+  protected String getServerBasePath() {
+    return new File("/app").exists() ? "/app/Server" : "../Server";
+  }
+
+  protected File[] getCorrectDirectory() {
+    String basePath = getServerBasePath();
+    File logFile = new File(basePath + "/logs/latest.log");
+    File serverJar = new File(basePath + "/server.jar");
+
+    if (!serverJar.exists()) {
+      logger.error("❌ server.jar not found at: " + serverJar.getAbsolutePath());
+    }
+
+    return new File[] { logFile, serverJar };
+  }
+
   public void startMinecraftServer(SlashCommandInteractionEvent event) {
 
     long startTime = System.currentTimeMillis(); // Start time
@@ -114,18 +155,15 @@ public class Bot extends ListenerAdapter {
     MessageChannel channel = event.getChannel();
 
     // Ensure the channel is a TextChannel
-    if (channel instanceof TextChannel textChannel) {
-      channelName = textChannel.getName();
-    } else {
-      logger.warn("This command can only be used in a text channel!");
-      event.getChannel().sendMessage("❌ This command can only be used in a text channel!").queue();
-    }
+    if (!isValidTextChannel(channel))
+      return;
 
     try {
 
       // Define server file location
-      File serverJar = new File("./Server/server.jar");
-      File logFile = new File("./Server/logs/latest.log");
+      File[] paths = getCorrectDirectory();
+      File serverJar = paths[1];
+      File logFile = paths[0];
 
       if (logFile.exists()) {
         logFile.delete();
@@ -136,7 +174,7 @@ public class Bot extends ListenerAdapter {
 
       // Start the server process
       ProcessBuilder processBuilder = new ProcessBuilder(
-          "java", "-Xmx512M", "-Xms256M", "-jar", serverJar.getAbsolutePath(),
+          "java", "-Xmx512M", "-Xms256M", "-jar", serverJar.getCanonicalPath(),
           "nogui");
 
       processBuilder.directory(serverJar.getParentFile()); // set working dir
@@ -203,7 +241,7 @@ public class Bot extends ListenerAdapter {
     }
 
     // Path of the latest.log file
-    File latestLog = new File("./Server/logs/latest.log");
+    File latestLog = getCorrectDirectory()[0];
 
     try {
       // Send "stop" command to the minecraft server
@@ -218,7 +256,7 @@ public class Bot extends ListenerAdapter {
       logger.info("Minecraft server stopped with exit code: " + exitCode);
 
       if (latestLog.exists()) {
-        File renamedLog = new File("./Server/logs/" + logFileName);
+        File renamedLog = new File(latestLog.getParent(), logFileName);
         Files.move(latestLog.toPath(), renamedLog.toPath(), StandardCopyOption.REPLACE_EXISTING);
         logger.info("Log file renamed to: " + renamedLog.getName());
       }
@@ -235,6 +273,10 @@ public class Bot extends ListenerAdapter {
         String idle = "❌ Minecraft server was stopped due to inactivity.";
         channel.sendMessage(idle).queue();
         logger.info("Minecraft server was stopped due to inactivity.");
+      } else {
+        String testStop = "Invalid stop message was sent";
+        channel.sendMessage(testStop).queue();
+        logger.error("Server received an invalid Stop message");
       }
 
     } catch (IOException e) {
@@ -276,58 +318,49 @@ public class Bot extends ListenerAdapter {
     if (processRunning && !portOpen) {
       event.getChannel().sendMessage("⚠️ Minecraft server is running, but the port is closed.").queue();
       logger.error("[BOT WARNING] Server process is running, but port is closed.");
+    } else {
+
+      OperatingSystemMXBean osBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+
+      String archName = osBean.getArch();
+      double cpuLoad = osBean.getCpuLoad();
+      double systemLoad = osBean.getSystemLoadAverage(); // System CPU load (average over the last minute)
+      int processors = osBean.getAvailableProcessors();
+      long totalMemory = osBean.getTotalMemorySize() / (1024 * 1024); // Total memory in MB
+      long freeMemory = osBean.getFreeMemorySize() / (1024 * 1024); // Free memory in MB
+      long usedMemory = totalMemory - freeMemory; // Used RAM in MB
+
+      // Uptime calculation
+      RuntimeMXBean runtimeMXBean = ManagementFactory.getRuntimeMXBean();
+      long uptimeMillis = runtimeMXBean.getUptime();
+      String uptime = String.format("%02d hours, %02d minutes",
+          TimeUnit.MILLISECONDS.toHours(uptimeMillis),
+          TimeUnit.MILLISECONDS.toMinutes(uptimeMillis) % 60);
+
+      // Create Embed
+      EmbedBuilder embedBuilder = new EmbedBuilder();
+      embedBuilder.setTitle("Server Status")
+          .setDescription("✅ Server is currently up and running!")
+          .setColor(Color.GREEN)
+          .addField("Uptime", uptime, false)
+          .addField("Arch Name", archName, false)
+          .addField("CPU Load", String.format("%.2f%%", cpuLoad * 100), false)
+          .addField("System Load Average", systemLoad == -1.0 ? "N/A" : String.format("%.2f%%", systemLoad * 100),
+              false)
+          .addField("Processors", String.format("%d", processors), false)
+          .addField("Total Memory", String.format("%d MB", totalMemory), true)
+          .addField("Used Memory", String.format("%d MB", usedMemory), true)
+          .addField("Free Memory", String.format("%d MB", freeMemory), true)
+          .setFooter("Keep calm and mine on ⛏️");
+
+      // Send Embed
+      event.getChannel().sendMessageEmbeds(embedBuilder.build()).queue();
+
+      logger.info("Server is running and online");
     }
-
-    // if (portOpen) {
-
-    OperatingSystemMXBean osBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
-
-    String archName = osBean.getArch();
-    double cpuLoad = osBean.getCpuLoad();
-    double systemLoad = osBean.getSystemLoadAverage(); // System CPU load (average over the last minute)
-    int processors = osBean.getAvailableProcessors();
-    long totalMemory = osBean.getTotalMemorySize() / (1024 * 1024); // Total memory in MB
-    long freeMemory = osBean.getFreeMemorySize() / (1024 * 1024); // Free memory in MB
-    long usedMemory = totalMemory - freeMemory; // Used RAM in MB
-
-    // Uptime calculation
-    RuntimeMXBean runtimeMXBean = ManagementFactory.getRuntimeMXBean();
-    long uptimeMillis = runtimeMXBean.getUptime();
-    String uptime = String.format("%02d hours, %02d minutes",
-        TimeUnit.MILLISECONDS.toHours(uptimeMillis),
-        TimeUnit.MILLISECONDS.toMinutes(uptimeMillis) % 60);
-
-    // Create Embed
-    EmbedBuilder embedBuilder = new EmbedBuilder();
-    embedBuilder.setTitle("Minecraft Server Status")
-        .setDescription("✅ Minecraft server is currently running and accepting connections!")
-        .setColor(Color.GREEN)
-        .addField("Uptime", uptime, false)
-        .addField("Arch Name", archName, false)
-        .addField("CPU Load", String.format("%.2f%%", cpuLoad * 100), false)
-        .addField("System Load Average", systemLoad == -1.0 ? "N/A" : String.format("%.2f%%", systemLoad * 100),
-            false)
-        .addField("Processors", String.format("%d", processors), false)
-        .addField("Total Memory", String.format("%d MB", totalMemory), true)
-        .addField("Used Memory", String.format("%d MB", usedMemory), true)
-        .addField("Free Memory", String.format("%d MB", freeMemory), true)
-        .setFooter("Keep calm and mine on ⛏️");
-
-    // Send Embed
-    event.getChannel().sendMessageEmbeds(embedBuilder.build()).queue();
-
-    System.out.println("[BOT] Server is running and online");
-    logger.info("Server is running and online");
-    // }
-
-    // else if (!processRunning) {
-    // event.getHook().sendMessage("⚠️ Minecraft server is offline").queue();
-    // logger.warn("Server is offline.");
-    // }
-
   }
 
-  private boolean isPortOpen(String host, int port) {
+  protected boolean isPortOpen(String host, int port) {
     try (Socket socket = new Socket(host, port)) {
       return true; // Successfully connected, port is open
     } catch (IOException e) {
@@ -343,13 +376,16 @@ public class Bot extends ListenerAdapter {
       return -1;
     }
 
-    File logFile = new File("./Server/logs/latest.log");
+    File logFile = getCorrectDirectory()[0];
+    // if (logFilePath != null) {
+    // logFile = logFilePath;
+    // } else {
+    // logFile = new File("../Server/logs/latest.log");
 
-    if (!logFile.exists()) {
-      event.getChannel().sendMessage("⚠️ Could not find the server log file.").queue();
-      logger.error("[BOT ERROR] latest.log not found.");
-      return -1;
-    }
+    // logFile = resolvePathWithFallback("./Server/logs/latest.log",
+    // "../Server/logs/latest.log");
+    // }
+
     int playersOnline = 0;
     try {
 
@@ -385,7 +421,7 @@ public class Bot extends ListenerAdapter {
 
     } catch (IOException | InterruptedException | NumberFormatException e) {
       event.getChannel().sendMessage("❌ Failed to read server logs.").queue();
-      logger.error("[BOT ERROR] Failed to read latest.log: " + e);
+      logger.error("[BOT ERROR] Failed to read latest.log (getPlayerCount): " + e);
     }
     return playersOnline;
   }
